@@ -1,6 +1,6 @@
 from typing import Any
 from django.forms import BaseModelForm
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views.generic import View, CreateView, UpdateView, DeleteView
 from explore_kabacan_app.forms import *
@@ -8,7 +8,9 @@ from django.urls import reverse_lazy
 from explore_kabacan_app.models import *
 from django.contrib import messages
 from explore_kabacan_app.mixins import CustomLoginRequiredMixin
-
+from django.utils import timezone
+from django.db.models import Count
+from django.db.models.functions import ExtractYear, TruncMonth
 
 class LoginView(View):
     template_name = "login.html"
@@ -31,12 +33,72 @@ class RegisterView(View):
     def post(self, request, *args, **kwargs):
         pass
 
+def monthly_visitors_count(request):
+    monthly_visitors = (
+        Tourist.objects.annotate(month=TruncMonth('visit_date'))
+        .values('month')
+        .annotate(count=Count('id'))
+        .order_by('month')
+    )
+
+    months = []
+    counts = []
+
+    for entry in monthly_visitors:
+        months.append(entry['month'].strftime("%Y-%m")) 
+        counts.append(entry['count'])
+
+    return JsonResponse({'months': months, 'counts': counts})
+
+
+def gender_distribution(request):
+    gender_counts = (
+        Tourist.objects.values('gender')
+        .annotate(count=Count('gender'))
+        .order_by('gender')
+    )
+
+    data = {entry['gender']: entry['count'] for entry in gender_counts}
+    return JsonResponse({'gender_distribution': data})
+
+
+def age_distribution(request):
+    current_year = timezone.now().year
+    age_ranges = {
+        '0-17': 0,
+        '18-35': 0,
+        '36-50': 0,
+        '51+': 0,
+    }
+
+    tourists = Tourist.objects.annotate(
+        age=current_year - ExtractYear('dob')
+    )
+
+    for tourist in tourists:
+        if tourist.age <= 17:
+            age_ranges['0-17'] += 1
+        elif 18 <= tourist.age <= 35:
+            age_ranges['18-35'] += 1
+        elif 36 <= tourist.age <= 50:
+            age_ranges['36-50'] += 1
+        else:
+            age_ranges['51+'] += 1
+
+    return JsonResponse({'age_ranges': age_ranges})
 
 class DashboardView(CustomLoginRequiredMixin, View):
     template_name = "dashboard.html"
 
     def get(self, request, *args, **kwargs):
         context = {}
+        current_time = timezone.now().date()
+        context['count_total_visitors'] = Tourist.objects.count()
+        context['count_total_spots'] = Spot.objects.count()
+        context['count_total_category'] = SpotCategory.objects.count()
+        context['count_total_visitors_today'] = Tourist.objects.filter(visit_date__date=current_time).count()
+        context['visitors_history'] = Tourist.objects.all().order_by('visit_date')[:5]
+        context['most_visited_spot'] =  Spot.objects.annotate(visit_count=Count('tourist')).order_by('-visit_count')[:6]
         return render(request, self.template_name, context)
 
 

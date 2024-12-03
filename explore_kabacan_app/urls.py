@@ -27,4 +27,9 @@ urlpatterns = [
     path("tourist/delete/<int:pk>", DeleteTouristView.as_view(), name="delete_tourist"),
     path("spot/delete/<int:pk>", DeleteSpotView.as_view(), name="delete_spot"),
     path("category/delete/<int:pk>", DeleteCategorySpotView.as_view(), name="delete_category"),
+
+    # chart json
+    path('chart/age_distribution/', age_distribution, name="age_distribution"),
+    path('chart/gender_distribution/', gender_distribution, name="gender_distribution"),
+    path('chart/monthly_visitors/', monthly_visitors_count, name="monthly_visitors_count"),
 ]

@@ -30,16 +30,24 @@ class CategoryForm(forms.ModelForm):
 class TouristForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(TouristForm, self).__init__(*args, **kwargs)
+
+        if 'dob' in self.fields:
+            self.fields['dob'].label = 'Birth Date'
+
         for field_name, field in self.fields.items():
             field.widget.attrs.update({'class': 'form-control'})
 
     class Meta:
         model = Tourist
         fields = '__all__'
+        widgets = {
+            'dob': forms.DateInput({'type': 'date'}),
+        }
 
 class SpotForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(SpotForm, self).__init__(*args, **kwargs)
+
         for field_name, field in self.fields.items():
             field.widget.attrs.update({'class': 'form-control'})
 

@@ -78,42 +78,110 @@
             <script src="{% static 'assets/js/plugin/jsvectormap/world.js' %}"></script>
             <script src="{% static 'assets/js/plugin/sweetalert/sweetalert.min.js' %}"></script>
             <script src="{% static 'assets/js/kaiadmin.min.js' %}"></script>
+            <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
             <script>
             if ($("#datatable".length > 0)) {
                 $("#datatable").DataTable()
             }
-            if ($("#lineChart").length > 0) {
-                $("#lineChart").sparkline([102, 109, 120, 99, 110, 105, 115], {
-                type: "line",
-                height: "70",
-                width: "100%",
-                lineWidth: "2",
-                lineColor: "#177dff",
-                fillColor: "rgba(23, 125, 255, 0.14)",
-            });
-            }
 
-            if ($("#lineChart2").length > 0) {
-                $("#lineChart2").sparkline([99, 125, 122, 105, 110, 124, 115], {
-                    type: "line",
-                    height: "70",
-                    width: "100%",
-                    lineWidth: "2",
-                    lineColor: "#f3545d",
-                    fillColor: "rgba(243, 84, 93, .14)",
-                });
-            }
+            fetch('{% url "monthly_visitors_count" %}')
+            .then(response => response.json())
+            .then(data => {
+                const months = data.months;
+                const counts = data.counts;
 
-            if ($("#lineChart3").length > 0) {
-                $("#lineChart3").sparkline([105, 103, 123, 100, 95, 105, 115], {
-                    type: "line",
-                    height: "70",
-                    width: "100%",
-                    lineWidth: "2",
-                    lineColor: "#ffa534",
-                    fillColor: "rgba(255, 165, 52, .14)",
-                });
-            }
+                var options = {
+                    series: [{
+                        name: 'Visitors',
+                        data: counts
+                    }],
+                    chart: {
+                        height: 350,
+                        type: 'area'
+                    },
+                    dataLabels: {
+                        enabled: false
+                    },
+                    stroke: {
+                        curve: 'smooth'
+                    },
+                    xaxis: {
+                        categories: months,
+                    },
+                    tooltip: {
+                        x: {
+                            format: 'yyyy-MM'
+                        },
+                    },
+                };
+
+                var chart = new ApexCharts(document.querySelector("#statisticsChart"), options);
+                chart.render();
+            })
+            .catch(error => console.error('Error fetching monthly visitors data:', error));
+
+
+            fetch('{% url "gender_distribution" %}')
+            .then(response => response.json())
+            .then(data => {
+                const genderData = Object.values(data.gender_distribution);
+                const genderLabels = Object.keys(data.gender_distribution);
+
+                var genderDistributionChartoptions = {
+                    series: genderData,
+                    chart: {
+                        type: 'donut',
+                    },
+                    labels: genderLabels,
+                    responsive: [{
+                        breakpoint: 480,
+                        options: {
+                            chart: {
+                                width: 200
+                            },
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }]
+                };
+
+                var genderDistributionChart = new ApexCharts(document.querySelector("#genderDistribution"), genderDistributionChartoptions);
+                genderDistributionChart.render();
+            })
+            .catch(error => console.error('Error fetching gender distribution data:', error));
+
+
+            fetch('{% url "age_distribution" %}')
+            .then(response => response.json())
+            .then(data => {
+                const ageData = Object.values(data.age_ranges);
+                const ageLabels = Object.keys(data.age_ranges);
+
+                var ageDistributionChartoptions = {
+                    series: ageData,
+                    chart: {
+                        type: 'donut',
+                    },
+                    labels: ageLabels,
+                    responsive: [{
+                        breakpoint: 480,
+                        options: {
+                            chart: {
+                                width: 200
+                            },
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }]
+                };
+
+                var ageDistributionChart = new ApexCharts(document.querySelector("#ageDistribution"), ageDistributionChartoptions);
+                ageDistributionChart.render();
+            })
+            .catch(error => console.error('Error fetching age distribution data:', error));
 
 
             function onBack() {
