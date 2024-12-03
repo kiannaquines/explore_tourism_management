@@ -26,7 +26,7 @@
     <div class="sidebar-wrapper scrollbar scrollbar-inner">
         <div class="sidebar-content">
             <ul class="nav nav-secondary">
-                <li class="nav-item active">
+                <li class="nav-item {% if 'dashboard' in request.path %}active{% endif %}">
                     <a
                         href="{% url 'dashboard' %}"
                         class="collapsed"
@@ -42,7 +42,7 @@
                     <h4 class="text-section">MODULES</h4>
                 </li>
                 
-                <li class="nav-item">
+                <li class="nav-item {% if 'spot' in request.path %}active{% endif %}">
                     <a data-bs-toggle="collapse" href="#tourist">
                         <i class="fas fa-th-list"></i>
                         <p>Tourism Spot</p>
@@ -63,7 +63,7 @@
                         </ul>
                     </div>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item {% if 'category' in request.path %}active{% endif %}">
                     <a data-bs-toggle="collapse" href="#category">
                         <i class="fas fa-th-list"></i>
                         <p>Category</p>
@@ -84,7 +84,7 @@
                         </ul>
                     </div>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item {% if 'toursit' in request.path %}active{% endif %}">
                     <a data-bs-toggle="collapse" href="#users">
                         <i class="fas fa-th-list"></i>
                         <p>Tourist</p>
@@ -105,7 +105,7 @@
                         </ul>
                     </div>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item {% if 'users' in request.path %}active{% endif %}">
                     <a data-bs-toggle="collapse" href="#usermodule">
                         <i class="fas fa-th-list"></i>
                         <p>User</p>
@@ -121,6 +121,22 @@
                             <li>
                                 <a href="{% url 'add_user' %}">
                                     <span class="sub-item">Create User</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item {% if 'users' in request.path %}active{% endif %}">
+                    <a data-bs-toggle="collapse" href="#statisticalreport">
+                        <i class="fas fa-th-list"></i>
+                        <p>Statistical Report</p>
+                        <span class="caret"></span>
+                    </a>
+                    <div class="collapse" id="statisticalreport">
+                        <ul class="nav nav-collapse">
+                            <li>
+                                <a href="{% url 'users' %}">
+                                    <span class="sub-item">Tourism Spot</span>
                                 </a>
                             </li>
                         </ul>

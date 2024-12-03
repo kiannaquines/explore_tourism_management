@@ -26,6 +26,7 @@
         <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
         <link rel="stylesheet" href="{% static 'assets/css/plugins.min.css' %}">
         <link rel="stylesheet" href="{% static 'assets/css/kaiadmin.min.css' %}">
+        <link href="https://cdn.datatables.net/v/bs5/dt-2.1.8/datatables.min.css" rel="stylesheet">
     </head>
     <body>
         <div class="wrapper">
@@ -78,6 +79,9 @@
             <script src="{% static 'assets/js/plugin/sweetalert/sweetalert.min.js' %}"></script>
             <script src="{% static 'assets/js/kaiadmin.min.js' %}"></script>
             <script>
+            if ($("#datatable".length > 0)) {
+                $("#datatable").DataTable()
+            }
             if ($("#lineChart").length > 0) {
                 $("#lineChart").sparkline([102, 109, 120, 99, 110, 105, 115], {
                 type: "line",
