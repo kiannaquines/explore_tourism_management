@@ -14,7 +14,7 @@ class MyUserAdmin(UserAdmin):
 
 
 class SpotAdmin(admin.ModelAdmin):
-    list_display = ("spot", "date_added")
+    list_display = ("spot","category","date_added")
     search_fields = ("spot",)
 
     def has_view_permission(self, request, obj=None):
@@ -23,6 +23,15 @@ class SpotAdmin(admin.ModelAdmin):
     def has_module_permission(self, request):
         return True
 
+class SpotCategoryAdmin(admin.ModelAdmin):
+    list_display = ("category", "date_added")
+    search_fields = ("category",)
+
+    def has_view_permission(self, request, obj=None):
+        return True
+
+    def has_module_permission(self, request):
+        return True
 
 class TouristAdmin(admin.ModelAdmin):
     list_display = ("firstname", "lastname", "email", "phone_number")
@@ -38,3 +47,4 @@ class TouristAdmin(admin.ModelAdmin):
 admin.site.register(CustomUser, MyUserAdmin)
 admin.site.register(Spot, SpotAdmin)
 admin.site.register(Tourist, TouristAdmin)
+admin.site.register(SpotCategory, SpotCategoryAdmin)

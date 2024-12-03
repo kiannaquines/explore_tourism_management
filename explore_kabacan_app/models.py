@@ -50,10 +50,21 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         verbose_name = "User"
         verbose_name_plural = "Users"
 
+class SpotCategory(models.Model):
+    category = models.CharField(max_length=255, blank=False, null=False)
+    date_added = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return self.category
+    
+    class Meta:
+        db_table = "spot_category_tbl"
+        verbose_name = "Spot Category"
+        verbose_name_plural = "Spot Categories"
 
 class Spot(models.Model):
     spot = models.CharField(max_length=255, blank=False, null=False)
-    spot_img = models.ImageField(max_length=255, blank=True, null=True, upload_to='media/')
+    category = models.ForeignKey(SpotCategory, blank=True, null=True, on_delete=models.SET_NULL)
     date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
