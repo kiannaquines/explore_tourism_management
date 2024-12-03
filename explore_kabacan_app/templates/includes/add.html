@@ -14,11 +14,22 @@
     <div class="card p-3">
         <form method="post">
             {% for input in form %}
+
+                {% if input.id_for_label == 'id_is_active' or input.id_for_label == 'id_is_staff' or input.id_for_label == 'id_is_superuser'  %}
+                <div class="form-check">
+                    {{ input }}
+                    <label class="form-check-label" for="flexCheckDefault">
+                        {{ input.label }}
+                    </label>
+                    <small class="text-muted">{{ input.help_text }}</small>
+                  </div>
+                {% else %}
                 <div class="form-group">
                     <label for="{{ input.id_for_label }}">{{ input.label }}</label>
                     {{ input }}
                     <small class="text-muted">{{ input.help_text }}</small>
                 </div>
+                {% endif %}
             {% endfor %}
             <div class="form-group">
                 <input type="submit" value="{{ button }}" class="btn btn-primary mt-2">

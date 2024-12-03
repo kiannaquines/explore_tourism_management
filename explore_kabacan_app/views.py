@@ -54,6 +54,12 @@ class SpotCategoryView(View):
         context = {}
         return render(request, self.template_name, context)
 
+class UsersView(View):
+    template_name = "users.html"
+
+    def get(self, request, *args, **kwargs):
+        context = {}
+        return render(request, self.template_name, context)
 
 class TouristView(View):
     template_name = "tourist.html"
@@ -102,6 +108,27 @@ class AddSpotView(CreateView):
         context = super().get_context_data(**kwargs)
         context["name"] = "Create New Spot"
         context["button"] = "Create Spot"
+        return context
+
+
+class AddUserView(CreateView):
+    form_class = UserForm
+    template_name = "includes/add.html"
+    model = CustomUser
+    success_url = reverse_lazy("users")
+
+    def form_valid(self, form):
+        valid_form = super().form_valid(form)
+        return valid_form
+
+    def form_invalid(self, form: BaseModelForm) -> HttpResponse:
+        invalid_form = super().form_invalid(form)
+        return invalid_form
+
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["name"] = "Create New User"
+        context["button"] = "Create User"
         return context
 
 
