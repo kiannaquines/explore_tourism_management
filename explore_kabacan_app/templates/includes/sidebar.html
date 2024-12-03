@@ -2,12 +2,14 @@
 <div class="sidebar" data-background-color="dark">
     <div class="sidebar-logo">
         <div class="logo-header" data-background-color="dark">
-            <a href="#" class="logo">
+            <a href="#" class="logo d-flex justify-content-center align-items-center">
                 <img
-                    src="{% static 'assets/img/kaiadmin/logo_light.svg' %}"
+                    src="{% static 'assets/img/EXPLORE KABACAN.svg' %}"
                     alt="navbar brand"
-                    class="navbar-brand"
-                    height="20"
+                    class="navbar-brand mt-3 mr-4"
+                    height="90%"
+                    width="100%"
+                    style="object-fit: cover;"
                 >
             </a>
             <div class="nav-toggle">
@@ -42,13 +44,13 @@
                     <h4 class="text-section">MODULES</h4>
                 </li>
                 
-                <li class="nav-item {% if 'spot' in request.path %}active{% endif %}">
-                    <a data-bs-toggle="collapse" href="#tourist">
+                <li class="nav-item {% if 'spot' in request.path %}submenu active{% endif %}">
+                    <a data-bs-toggle="collapse" href="#tourist" aria-expanded="true">
                         <i class="fas fa-th-list"></i>
                         <p>Tourism Spot</p>
                         <span class="caret"></span>
                     </a>
-                    <div class="collapse" id="tourist">
+                    <div class="collapse {% if 'spot' in request.path %}show{% endif %}" id="tourist">
                         <ul class="nav nav-collapse">
                             <li>
                                 <a href="{% url 'spot' %}">
@@ -63,13 +65,13 @@
                         </ul>
                     </div>
                 </li>
-                <li class="nav-item {% if 'category' in request.path %}active{% endif %}">
-                    <a data-bs-toggle="collapse" href="#category">
+                <li class="nav-item {% if 'category' in request.path %}submenu active{% endif %}">
+                    <a data-bs-toggle="collapse" href="#category" aria-expanded="true">
                         <i class="fas fa-th-list"></i>
                         <p>Category</p>
                         <span class="caret"></span>
                     </a>
-                    <div class="collapse" id="category">
+                    <div class="collapse  {% if 'category' in request.path %}show{% endif %}" id="category">
                         <ul class="nav nav-collapse">
                             <li>
                                 <a href="{% url 'category' %}">
@@ -84,13 +86,13 @@
                         </ul>
                     </div>
                 </li>
-                <li class="nav-item {% if 'toursit' in request.path %}active{% endif %}">
-                    <a data-bs-toggle="collapse" href="#users">
+                <li class="nav-item {% if 'toursit' in request.path %}submenu active{% endif %}">
+                    <a data-bs-toggle="collapse" href="#users" aria-expanded="true">
                         <i class="fas fa-th-list"></i>
                         <p>Tourist</p>
                         <span class="caret"></span>
                     </a>
-                    <div class="collapse" id="users">
+                    <div class="collapse {% if 'toursit' in request.path %}show{% endif %}" id="users">
                         <ul class="nav nav-collapse">
                             <li>
                                 <a href="{% url 'toursit' %}">
@@ -105,13 +107,13 @@
                         </ul>
                     </div>
                 </li>
-                <li class="nav-item {% if 'users' in request.path %}active{% endif %}">
-                    <a data-bs-toggle="collapse" href="#usermodule">
+                <li class="nav-item {% if 'users' in request.path %}submenu active{% endif %}">
+                    <a data-bs-toggle="collapse" href="#usermodule" aria-expanded="true">
                         <i class="fas fa-th-list"></i>
                         <p>User</p>
                         <span class="caret"></span>
                     </a>
-                    <div class="collapse" id="usermodule">
+                    <div class="collapse {% if 'users' in request.path %}show{% endif %}" id="usermodule">
                         <ul class="nav nav-collapse">
                             <li>
                                 <a href="{% url 'users' %}">

@@ -39,7 +39,7 @@
                     aria-expanded="false"
                 >
                     <div class="avatar-sm">
-                        <img src="{% static 'assets/img/profile.jpg' %}" alt="..." class="avatar-img rounded-circle">
+                        <img src="{% static 'assets/img/avatar.png' %}" alt="..." class="avatar-img rounded-circle">
                     </div>
                     <span class="profile-username">
                         <span class="op-7">Hi,</span>
@@ -51,7 +51,7 @@
                         <li>
                             <div class="user-box">
                                 <div class="avatar-lg">
-                                    <img src="{% static 'assets/img/profile.jpg' %}" alt="image profile" class="avatar-img rounded">
+                                    <img src="{% static 'assets/img/avatar.png' %}" alt="image profile" class="avatar-img rounded">
                                 </div>
                                 <div class="u-text">
                                     <h4 style="text-transform: uppercase;">{{ request.user.username }}</h4>
@@ -60,7 +60,7 @@
                             </div>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="#">Logout</a>
+                            <a class="dropdown-item" href="{% url 'logout_user' %}">Logout</a>
                         </li>
                     </div>
                 </ul>

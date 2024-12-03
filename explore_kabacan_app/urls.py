@@ -4,6 +4,7 @@ from explore_kabacan_app.views import *
 urlpatterns = [
     path("", LoginView.as_view(), name="login"),
     path("register/", RegisterView.as_view(), name="register"),
+    path("logout/", logout_user, name="logout_user"),
     path("dashboard/", DashboardView.as_view(), name="dashboard"),
 
     # View
@@ -32,4 +33,9 @@ urlpatterns = [
     path('chart/age_distribution/', age_distribution, name="age_distribution"),
     path('chart/gender_distribution/', gender_distribution, name="gender_distribution"),
     path('chart/monthly_visitors/', monthly_visitors_count, name="monthly_visitors_count"),
+
+
+    # export
+
+    path('export/statistical_report/', generate_pdf_report, name="generate_pdf_report"),
 ]
