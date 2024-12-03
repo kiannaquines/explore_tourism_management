@@ -8,7 +8,7 @@
             <h6 class="op-7 mb-2">Manage users in the system</h6>
         </div>
         <div class="ms-md-auto py-2 py-md-0">
-            <a href="#" class="btn btn-primary btn-round">Create User</a>
+            <a href="{% url 'add_user' %}" class="btn btn-primary btn-round">Create User</a>
         </div>
     </div>
     {% include './includes/message.html' %}
@@ -16,17 +16,28 @@
         <table class="table" id="datatable">
             <thead>
                 <tr>
-                    <th>Category</th>
-                    <th>Date Added</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Date Joined</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
+                {% for user in users %}
                 <tr>
-                    <td>Testing Category</td>
-                    <td>Testing Category</td>
-                    <td>Testing Category</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.date_joined }}</td>
+                    <td class="d-flex align-items-left justify-content-start gap-2">
+                        <a href="">
+                            <i class="fas fa-pen"></i>
+                        </a>
+                        <a href="">
+                            <i class="fas fa-trash text-danger"></i>
+                        </a>
+                    </td>
                 </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>

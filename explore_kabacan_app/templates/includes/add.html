@@ -13,6 +13,7 @@
     </div>
     <div class="card p-3">
         <form method="post">
+            {% csrf_token %}
             {% for input in form %}
 
                 {% if input.id_for_label == 'id_is_active' or input.id_for_label == 'id_is_staff' or input.id_for_label == 'id_is_superuser'  %}

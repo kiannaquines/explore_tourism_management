@@ -8,7 +8,7 @@
             <h6 class="op-7 mb-2">Manage category here</h6>
         </div>
         <div class="ms-md-auto py-2 py-md-0">
-            <a href="#" class="btn btn-primary btn-round">Create Category</a>
+            <a href="{% url 'add_category' %}" class="btn btn-primary btn-round">Create Category</a>
         </div>
     </div>
     {% include './includes/message.html' %}
@@ -22,11 +22,20 @@
                 </tr>
             </thead>
             <tbody>
+                {% for category in categories %}
                 <tr>
-                    <td>Testing Category</td>
-                    <td>Testing Category</td>
-                    <td>Testing Category</td>
+                    <td>{{ category.category }}</td>
+                    <td>{{ category.date_added }}</td>
+                    <td class="d-flex align-items-left justify-content-start gap-2">
+                        <a href="">
+                            <i class="fas fa-pen"></i>
+                        </a>
+                        <a href="">
+                            <i class="fas fa-trash text-danger"></i>
+                        </a>
+                    </td>
                 </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>

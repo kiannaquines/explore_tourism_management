@@ -7,6 +7,7 @@ from explore_kabacan_app.forms import *
 from django.urls import reverse_lazy
 from explore_kabacan_app.models import *
 from django.contrib import messages
+from explore_kabacan_app.mixins import CustomLoginRequiredMixin
 
 
 class LoginView(View):
@@ -31,7 +32,7 @@ class RegisterView(View):
         pass
 
 
-class DashboardView(View):
+class DashboardView(CustomLoginRequiredMixin, View):
     template_name = "dashboard.html"
 
     def get(self, request, *args, **kwargs):
@@ -39,37 +40,43 @@ class DashboardView(View):
         return render(request, self.template_name, context)
 
 
-class SpotView(View):
+class SpotView(CustomLoginRequiredMixin, View):
     template_name = "spots.html"
 
     def get(self, request, *args, **kwargs):
         context = {}
+        context["tourist_spot"] = Spot.objects.all()
         return render(request, self.template_name, context)
 
 
-class SpotCategoryView(View):
+class SpotCategoryView(CustomLoginRequiredMixin, View):
     template_name = "category.html"
 
     def get(self, request, *args, **kwargs):
         context = {}
+        context["categories"] = SpotCategory.objects.all()
         return render(request, self.template_name, context)
 
-class UsersView(View):
+
+class UsersView(CustomLoginRequiredMixin, View):
     template_name = "users.html"
 
     def get(self, request, *args, **kwargs):
         context = {}
+        context["users"] = CustomUser.objects.all()
         return render(request, self.template_name, context)
 
-class TouristView(View):
+
+class TouristView(CustomLoginRequiredMixin, View):
     template_name = "tourist.html"
 
     def get(self, request, *args, **kwargs):
         context = {}
+        context["tourists"] = Tourist.objects.all()
         return render(request, self.template_name, context)
 
 
-class AddTouristView(CreateView):
+class AddTouristView(CustomLoginRequiredMixin, CreateView):
     form_class = TouristForm
     template_name = "includes/add.html"
     model = Tourist
@@ -77,11 +84,17 @@ class AddTouristView(CreateView):
 
     def form_valid(self, form):
         valid_form = super().form_valid(form)
+        messages.success(
+            self.request, "Tourist added successfully.",
+            extra_tags='success'
+        )
         return valid_form
 
     def form_invalid(self, form: BaseModelForm) -> HttpResponse:
-        invalid_form = super().form_invalid(form)
-        return invalid_form
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(self.request, f"{field}: {error}", extra_tags='danger')
+        return super().form_invalid(form)
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
@@ -90,7 +103,7 @@ class AddTouristView(CreateView):
         return context
 
 
-class AddSpotView(CreateView):
+class AddSpotView(CustomLoginRequiredMixin, CreateView):
     form_class = SpotForm
     template_name = "includes/add.html"
     model = Spot
@@ -98,11 +111,17 @@ class AddSpotView(CreateView):
 
     def form_valid(self, form):
         valid_form = super().form_valid(form)
+        messages.success(
+            self.request, "Tourist Spot added successfully.",
+            extra_tags='success'
+        )
         return valid_form
 
     def form_invalid(self, form: BaseModelForm) -> HttpResponse:
-        invalid_form = super().form_invalid(form)
-        return invalid_form
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(self.request, f"{field}: {error}", extra_tags='danger')
+        return super().form_invalid(form)
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
@@ -111,7 +130,7 @@ class AddSpotView(CreateView):
         return context
 
 
-class AddUserView(CreateView):
+class AddUserView(CustomLoginRequiredMixin, CreateView):
     form_class = UserForm
     template_name = "includes/add.html"
     model = CustomUser
@@ -119,11 +138,17 @@ class AddUserView(CreateView):
 
     def form_valid(self, form):
         valid_form = super().form_valid(form)
+        messages.success(
+            self.request, "User added successfully.",
+            extra_tags='success'
+        )
         return valid_form
 
     def form_invalid(self, form: BaseModelForm) -> HttpResponse:
-        invalid_form = super().form_invalid(form)
-        return invalid_form
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(self.request, f"{field}: {error}", extra_tags='danger')
+        return super().form_invalid(form)
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
@@ -132,7 +157,7 @@ class AddUserView(CreateView):
         return context
 
 
-class AddCategorySpotView(CreateView):
+class AddCategorySpotView(CustomLoginRequiredMixin, CreateView):
     form_class = CategoryForm
     template_name = "includes/add.html"
     model = SpotCategory
@@ -140,11 +165,17 @@ class AddCategorySpotView(CreateView):
 
     def form_valid(self, form):
         valid_form = super().form_valid(form)
+        messages.success(
+            self.request, "Category added successfully.",
+            extra_tags='success'
+        )
         return valid_form
 
     def form_invalid(self, form: BaseModelForm) -> HttpResponse:
-        invalid_form = super().form_invalid(form)
-        return invalid_form
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(self.request, f"{field}: {error}", extra_tags='danger')
+        return super().form_invalid(form)
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
@@ -153,7 +184,7 @@ class AddCategorySpotView(CreateView):
         return context
 
 
-class UpdateCategorySpotView(UpdateView):
+class UpdateCategorySpotView(CustomLoginRequiredMixin, UpdateView):
     pk_url_kwarg = "pk"
     form_class = CategoryForm
     template_name = "includes/add.html"
@@ -162,11 +193,17 @@ class UpdateCategorySpotView(UpdateView):
 
     def form_valid(self, form):
         valid_form = super().form_valid(form)
+        messages.success(
+            self.request, "Category updated successfully.",
+            extra_tags='success'
+        )
         return valid_form
 
     def form_invalid(self, form: BaseModelForm) -> HttpResponse:
-        invalid_form = super().form_invalid(form)
-        return invalid_form
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(self.request, f"{field}: {error}", extra_tags='danger')
+        return super().form_invalid(form)
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
@@ -175,7 +212,7 @@ class UpdateCategorySpotView(UpdateView):
         return context
 
 
-class UpdateSpotView(UpdateView):
+class UpdateSpotView(CustomLoginRequiredMixin, UpdateView):
     pk_url_kwarg = "pk"
     form_class = SpotForm
     template_name = "includes/add.html"
@@ -184,11 +221,17 @@ class UpdateSpotView(UpdateView):
 
     def form_valid(self, form):
         valid_form = super().form_valid(form)
+        messages.success(
+            self.request, "Tourist Spot updated successfully.",
+            extra_tags='success'
+        )
         return valid_form
 
     def form_invalid(self, form: BaseModelForm) -> HttpResponse:
-        invalid_form = super().form_invalid(form)
-        return invalid_form
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(self.request, f"{field}: {error}", extra_tags='danger')
+        return super().form_invalid(form)
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
@@ -197,7 +240,7 @@ class UpdateSpotView(UpdateView):
         return context
 
 
-class UpdateTouristView(UpdateView):
+class UpdateTouristView(CustomLoginRequiredMixin, UpdateView):
     pk_url_kwarg = "pk"
     form_class = TouristForm
     template_name = "includes/add.html"
@@ -206,11 +249,17 @@ class UpdateTouristView(UpdateView):
 
     def form_valid(self, form):
         valid_form = super().form_valid(form)
+        messages.success(
+            self.request, "Tourist information updated successfully.",
+            extra_tags='success'
+        )
         return valid_form
 
     def form_invalid(self, form: BaseModelForm) -> HttpResponse:
-        invalid_form = super().form_invalid(form)
-        return invalid_form
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(self.request, f"{field}: {error}", extra_tags='danger')
+        return super().form_invalid(form)
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
@@ -219,7 +268,7 @@ class UpdateTouristView(UpdateView):
         return context
 
 
-class DeleteTouristView(DeleteView):
+class DeleteTouristView(CustomLoginRequiredMixin, DeleteView):
     pk_url_kwarg = "pk"
     template_name = "includes/delete.html"
     model = Tourist
@@ -227,20 +276,26 @@ class DeleteTouristView(DeleteView):
 
     def form_valid(self, form):
         valid_form = super().form_valid(form)
+        messages.success(
+            self.request, "Tourist information removed successfully.",
+            extra_tags='success'
+        )
         return valid_form
 
     def form_invalid(self, form: BaseModelForm) -> HttpResponse:
-        invalid_form = super().form_invalid(form)
-        return invalid_form
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(self.request, f"{field}: {error}", extra_tags='danger')
+        return super().form_invalid(form)
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context["name"] = "Remove Tourist"
-        context["button"] = "Remove"
+        context["button"] = "Yes, Remove"
         return context
 
 
-class DeleteSpotView(DeleteView):
+class DeleteSpotView(CustomLoginRequiredMixin, DeleteView):
     pk_url_kwarg = "pk"
     template_name = "includes/delete.html"
     model = Spot
@@ -248,35 +303,47 @@ class DeleteSpotView(DeleteView):
 
     def form_valid(self, form):
         valid_form = super().form_valid(form)
+        messages.success(
+            self.request, "Tourist spot information removed successfully.",
+            extra_tags='success'
+        )
         return valid_form
 
     def form_invalid(self, form: BaseModelForm) -> HttpResponse:
-        invalid_form = super().form_invalid(form)
-        return invalid_form
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(self.request, f"{field}: {error}", extra_tags='danger')
+        return super().form_invalid(form)
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context["name"] = "Remove Spot"
-        context["button"] = "Remove"
+        context["button"] = "Yes, Remove"
         return context
 
 
-class DeleteCategorySpotView(DeleteView):
+class DeleteCategorySpotView(CustomLoginRequiredMixin, DeleteView):
     pk_url_kwarg = "pk"
     template_name = "includes/delete.html"
     model = SpotCategory
-    success_url = reverse_lazy("spot")
+    success_url = reverse_lazy("category")
 
     def form_valid(self, form):
         valid_form = super().form_valid(form)
+        messages.success(
+            self.request, "Category information removed successfully.",
+            extra_tags='success'
+        )
         return valid_form
 
     def form_invalid(self, form: BaseModelForm) -> HttpResponse:
-        invalid_form = super().form_invalid(form)
-        return invalid_form
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(self.request, f"{field}: {error}", extra_tags='danger')
+        return super().form_invalid(form)
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context["name"] = "Remove Category"
-        context["button"] = "Remove"
+        context["button"] = "Yes, Remove"
         return context

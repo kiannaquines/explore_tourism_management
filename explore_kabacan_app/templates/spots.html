@@ -8,7 +8,7 @@
             <h6 class="op-7 mb-2">Manage spots here</h6>
         </div>
         <div class="ms-md-auto py-2 py-md-0">
-            <a href="#" class="btn btn-primary btn-round">Create Spot</a>
+            <a href="{% url 'add_spot' %}" class="btn btn-primary btn-round">Create Spot</a>
         </div>
     </div>
     {% include './includes/message.html' %}
@@ -16,17 +16,28 @@
         <table class="table" id="datatable">
             <thead>
                 <tr>
-                    <th>Category</th>
+                    <th>Tourist Spot</th>
                     <th>Date Added</th>
+                    <th>Category</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
+                {% for spot in tourist_spot %}
                 <tr>
-                    <td>Testing Category</td>
-                    <td>Testing Category</td>
-                    <td>Testing Category</td>
+                    <td>{{ spot.spot }}</td>
+                    <td>{{ spot.date_added }}</td>
+                    <td>{{ spot.category }}</td>
+                    <td class="d-flex align-items-left justify-content-start gap-2">
+                        <a href="">
+                            <i class="fas fa-pen"></i>
+                        </a>
+                        <a href="">
+                            <i class="fas fa-trash text-danger"></i>
+                        </a>
+                    </td>
                 </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>

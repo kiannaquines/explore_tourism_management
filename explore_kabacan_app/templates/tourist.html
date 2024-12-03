@@ -8,7 +8,7 @@
             <h6 class="op-7 mb-2">Manage tourist here</h6>
         </div>
         <div class="ms-md-auto py-2 py-md-0">
-            <a href="#" class="btn btn-primary btn-round">Create Tourist</a>
+            <a href="{% url 'add_tourist' %}" class="btn btn-primary btn-round">Create Tourist</a>
         </div>
     </div>
     {% include './includes/message.html' %}
@@ -16,17 +16,28 @@
         <table class="table" id="datatable">
             <thead>
                 <tr>
-                    <th>Category</th>
+                    <th>Tourist</th>
+                    <th>Tourist Spot</th>
                     <th>Date Added</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
+                {% for tourist in tourists %}
                 <tr>
-                    <td>Testing Category</td>
-                    <td>Testing Category</td>
-                    <td>Testing Category</td>
+                    <td>{{ tourist.get_full_name }}</td>
+                    <td>{{ tourist.destination }}</td>
+                    <td>{{ tourist.visit_date }}</td>
+                    <td class="d-flex align-items-left justify-content-start gap-2">
+                        <a href="{% url 'update_tourist' pk=tourist.id %}">
+                            <i class="fas fa-pen"></i>
+                        </a>
+                        <a href="{% url 'delete_tourist' pk=tourist.id %}">
+                            <i class="fas fa-trash text-danger"></i>
+                        </a>
+                    </td>
                 </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>

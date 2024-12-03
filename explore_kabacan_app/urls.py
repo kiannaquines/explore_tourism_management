@@ -19,7 +19,7 @@ urlpatterns = [
     path("category/add", AddCategorySpotView.as_view(), name="add_category"),
 
     # Update View
-    path("tourist/update/<int:pk>", AddTouristView.as_view(), name="update_tourist"),
+    path("tourist/update/<int:pk>", UpdateTouristView.as_view(), name="update_tourist"),
     path("spot/update/<int:pk>", UpdateSpotView.as_view(), name="update_spot"),
     path("category/update/<int:pk>",UpdateCategorySpotView.as_view(), name="update_category"),
 
