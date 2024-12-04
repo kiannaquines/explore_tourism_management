@@ -36,6 +36,9 @@ urlpatterns = [
 
 
     # export
-
     path('export/statistical_report/', generate_pdf_report, name="generate_pdf_report"),
+
+
+    # tourist create 
+    path('visitor/tourist/create', CreateTouristView.as_view(), name="visitor_tourist_create"),
 ]

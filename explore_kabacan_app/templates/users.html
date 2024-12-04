@@ -18,6 +18,7 @@
                 <tr>
                     <th>Username</th>
                     <th>Email</th>
+                    <th>Active</th>
                     <th>Date Joined</th>
                     <th>Action</th>
                 </tr>
@@ -27,6 +28,13 @@
                 <tr>
                     <td>{{ user.username }}</td>
                     <td>{{ user.email }}</td>
+                    <td>
+                        {% if user.is_active %}
+                        <span class="btn btn-label-success btn-round btn-sm">Active</span>
+                        {% else %}
+                        <span class="btn btn-label-warning btn-round btn-sm">Inactive</span>
+                        {% endif %}
+                    </td>
                     <td>{{ user.date_joined }}</td>
                     <td class="d-flex align-items-left justify-content-start gap-2">
                         <a href="">

@@ -29,9 +29,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     middle_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     email = models.EmailField(unique=True)
-    is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
-    is_superuser = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True, help_text='Whether the user can login to the system')
+    is_staff = models.BooleanField(default=False, help_text='Whether the user can access the super admin')
+    is_superuser = models.BooleanField(default=False, help_text='Whether the user has the admin permission to system')
     date_joined = models.DateTimeField(default=timezone.now)
 
     objects = CustomUserManager()

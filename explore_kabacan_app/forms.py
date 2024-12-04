@@ -2,6 +2,63 @@ from django import forms
 from explore_kabacan_app.models import *
 from django.contrib.auth.forms import UserCreationForm
 
+class CreateTouristForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(CreateTouristForm, self).__init__(*args, **kwargs)
+
+        if 'dob' in self.fields:
+            self.fields['dob'].label = ''
+
+        if 'gender' in self.fields:
+            self.fields['gender'].choices = [('Male', 'Male'), ('Female', 'Female')]
+            self.fields['gender'].label = ''
+        
+        if 'destination' in self.fields:
+            self.fields['destination'] = forms.ModelChoiceField(
+                queryset=Spot.objects.all(),
+                empty_label=None,
+                widget=forms.Select(attrs={'class': 'form-control'})
+            )
+            self.fields['destination'].label = ''
+
+        for field_name, field in self.fields.items():
+            field.widget.attrs.update({'class': 'form-control', 'placeholder': field_name  })
+
+    class Meta:
+        model = Tourist
+        fields = '__all__'
+        widgets = {
+            'dob': forms.DateInput({'type': 'date'}),
+        }
+
+
+class RegisterForm(UserCreationForm):
+    def __init__(self, *args, **kwargs):
+        super(RegisterForm, self).__init__(*args, **kwargs)
+        self.fields['username'].label = 'Username'
+        self.fields['first_name'].label = 'Firstname'
+        self.fields['last_name'].label = 'Lastname'
+        self.fields['email'].label = 'Email Address'
+        self.fields['password1'].label = 'Password'
+        self.fields['password2'].label = 'Confrim Password'
+        
+        for field_name, field in self.fields.items():
+            field.widget.attrs.update({'class': 'form-control',         'placeholder': field.label })
+            
+    class Meta:
+        model = CustomUser
+        fields = ["username", "first_name", "last_name", "email", "password1", "password2"]
+
+
+class LoginForm(forms.Form):
+    username = forms.CharField(max_length=150, required=True, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Username',
+    }))
+    password = forms.CharField(max_length=128, required=True, widget=forms.PasswordInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Password',
+    }))
 
 class UserForm(UserCreationForm):
     def __init__(self, *args, **kwargs):

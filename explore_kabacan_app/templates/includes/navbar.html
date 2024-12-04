@@ -59,6 +59,11 @@
                                 </div>
                             </div>
                         </li>
+                        {% if request.user.is_staff or request.user.is_superuser %}
+                        <li>
+                            <a class="dropdown-item" href="/admin">Super Administrator</a>
+                        </li>
+                        {% endif %}
                         <li>
                             <a class="dropdown-item" href="{% url 'logout_user' %}">Logout</a>
                         </li>

@@ -1,13 +1,11 @@
 import io
 from datetime import datetime
 from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
 from io import BytesIO
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from typing import Any
-from django.forms import BaseModelForm
+from django.forms import BaseModelForm, ValidationError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.views.generic import View, CreateView, UpdateView, DeleteView
 from explore_kabacan_app.forms import *
 from django.urls import reverse_lazy
@@ -26,9 +24,106 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Image
 from reportlab.lib.units import inch
 from django.contrib.auth import login, logout, authenticate
 
+
+class CreateTouristView(CreateView):
+    form_class = CreateTouristForm
+    template_name = "create_tourist.html"
+    model = Tourist
+    success_url = reverse_lazy("visitor_tourist_create")
+
+    def form_valid(self, form):
+        valid_form = super().form_valid(form)
+        messages.success(
+            self.request, "You have successfully created your tourist information, please come again.", extra_tags="success"
+        )
+        return valid_form
+
+    def form_invalid(self, form: BaseModelForm) -> HttpResponse:
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(self.request, f"{field}: {error}", extra_tags="danger")
+        return super().form_invalid(form)
+
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["name"] = "Create My Tourist Information"
+        context["button"] = "Continue"
+        return context
+    
+
+class LoginView(View):
+    template_name = "login.html"
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect("dashboard")
+        
+        form = LoginForm()
+        return render(request, self.template_name, {"form": form})
+
+    def post(self, request, *args, **kwargs):
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get("username")
+            password = form.cleaned_data.get("password")
+
+            try:
+                user = CustomUser.objects.get(username=username)
+                if not user.is_active:
+                    messages.error(request, "Your account is inactive. Please contact support.", extra_tags="danger")
+                    return render(request, self.template_name, {"form": form})
+            except CustomUser.DoesNotExist:
+                messages.error(request, "No user found with your username, please try again.", extra_tags="danger")
+                return render(request, self.template_name, {"form": form})
+
+            user = authenticate(request, username=username, password=password)
+
+            if user is not None:
+                login(request, user)
+                messages.success(request, "You have successfully logged in.", extra_tags="success")
+                return redirect("dashboard")
+            else:
+                messages.error(request, "Invalid username or password.", extra_tags="danger")
+        else:
+            messages.error(request, "Please correct the errors below.", extra_tags="danger")
+        
+        return render(request, self.template_name, {"form": form})
+
+
+class RegisterView(View):
+    template_name = "register.html"
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect("dashboard")
+        
+        register_form = RegisterForm()
+        return render(request, self.template_name, {'form':register_form})
+
+    def post(self, request, *args, **kwargs):
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.is_active = False
+            user.save()
+            messages.success(
+                request,
+                "Account created successfully! Please wait for activation.",
+                extra_tags="success",
+            )
+            return redirect("login")
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, error, extra_tags="danger")
+
+        return render(request, self.template_name, {"form": form})
+
+
 def logout_user(request):
     logout(request)
-    return HttpResponseRedirect(reverse_lazy('login'))
+    return HttpResponseRedirect(reverse_lazy("login"))
+
 
 def create_pie_chart(data, labels, title):
     fig = go.Figure(data=[go.Pie(labels=labels, values=data, hole=0.3)])
@@ -114,7 +209,9 @@ def generate_pdf_report(request):
     )
     spot_data = [spot["count"] for spot in spot_counts]
     spot_labels = [spot["destination__spot"] for spot in spot_counts]
-    spot_chart_buf = create_pie_chart(spot_data, spot_labels, "Most Visitors Distribution per Spot")
+    spot_chart_buf = create_pie_chart(
+        spot_data, spot_labels, "Most Visitors Distribution per Spot"
+    )
 
     response = HttpResponse(content_type="application/pdf")
     response["Content-Disposition"] = 'attachment; filename="tourist_report.pdf"'
@@ -145,7 +242,9 @@ def generate_pdf_report(request):
     )
 
     title = Paragraph("Explore Kabacan Management System", header_style)
-    third_title = Paragraph(f"Date Generated: {today.strftime('%Y-%m-%d')}", header_style)
+    third_title = Paragraph(
+        f"Date Generated: {today.strftime('%Y-%m-%d')}", header_style
+    )
     second_title = Paragraph("Tourist Report", header_style)
     elements.append(title)
     elements.append(third_title)
@@ -192,28 +291,6 @@ def generate_pdf_report(request):
 
     response.write(pdf)
     return response
-
-
-class LoginView(View):
-    template_name = "login.html"
-
-    def get(self, request, *args, **kwargs):
-        context = {}
-        return render(request, self.template_name, context)
-
-    def post(self, request, *args, **kwargs):
-        pass
-
-
-class RegisterView(View):
-    template_name = "register.html"
-
-    def get(self, request, *args, **kwargs):
-        context = {}
-        return render(request, self.template_name, context)
-
-    def post(self, request, *args, **kwargs):
-        pass
 
 
 def monthly_visitors_count(request):

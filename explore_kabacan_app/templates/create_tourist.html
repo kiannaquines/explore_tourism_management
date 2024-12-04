@@ -1,0 +1,47 @@
+{% extends './includes/auth_base.html' %}
+
+{% block auth_content %}
+<div class="container container-login animated fadeIn w-50">
+    {% include './includes/message.html' %}
+    <h3 class="text-center">Tourist Form Information</h3>
+    <form method="post">
+        {% csrf_token %}
+        <div class="login-form">
+            <div class="form-sub">
+                <div class="row">
+                    <div class="col">
+                        <div class="form-floating form-floating-custom mb-3">
+                            {{ form.firstname }}
+                            <label for="{{ form.firstname.id_for_label }}">{{ form.firstname.label }}</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-floating form-floating-custom mb-3">
+                            {{ form.lastname }}
+                            <label for="{{ form.lastname.id_for_label }}">{{ form.lastname.label }}</label>
+                        </div>
+                    </div>
+                </div>
+
+                {% for input in form %}
+                    {% if input.id_for_label != 'id_firstname' and input.id_for_label != 'id_lastname' %}
+                    <div class="form-floating form-floating-custom mb-3">
+                        {{ input }}
+                        <label for="{{ input.id_for_label }}">{{ input.label }}</label>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            <div class="form-action mb-3">
+                <button type="submit" class="btn btn-primary w-100 btn-login">Continue</button>
+            </div>
+
+            <div class="login-account">
+                <span class="msg">Not a tourist?</span>
+                <a href="{% url 'login' %}" class="link">Login</a>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
