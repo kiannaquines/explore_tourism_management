@@ -7,26 +7,47 @@
             <h3 class="fw-bold mb-3">Tourist Spot Statical Reports</h3>
             <h6 class="op-7 mb-2">Export your statical report of tourist spot in Kabacan</h6>
         </div>
-        <div class="ms-md-auto py-2 py-md-0">
-            <a href="#" class="btn btn-primary btn-round">Export Report</a>
-        </div>
     </div>
     {% include './includes/message.html' %}
+    <div class="card p-3">
+        <form action="{% url 'generate_pdf_report' %}" method="GET">
+            <div class="row d-flex align-items-center justify-content-between">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <input type="date" class="form-control" id="start_date" name="start_date" required>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <input type="date" class="form-control" id="end_date" name="end_date" required>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-primary btn-block w-100" value="Export PDF">
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
     <div class="card py-3">
         <table class="table" id="datatable">
             <thead>
                 <tr>
-                    <th>Category</th>
-                    <th>Date Added</th>
-                    <th>Action</th>
+                    <th>Tourist name</th>
+                    <th>Destination</th>
+                    <th>Gender</th>
                 </tr>
             </thead>
             <tbody>
+                {% for tourist in tourists %}
                 <tr>
-                    <td>Testing Category</td>
-                    <td>Testing Category</td>
-                    <td>Testing Category</td>
+                    <td>{{ tourist.get_full_name }}</td>
+                    <td>{{ tourist.destination }}</td>
+                    <td>{{ tourist.gender }}</td>
                 </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>

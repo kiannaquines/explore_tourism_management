@@ -28,6 +28,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=255)
     middle_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
+    assigned_to = models.ForeignKey('Spot', null=True, blank=True, on_delete=models.CASCADE, help_text='Select what tourist spot you are assigned to.')
     email = models.EmailField(unique=True)
     is_active = models.BooleanField(default=True, help_text='Whether the user can login to the system')
     is_staff = models.BooleanField(default=False, help_text='Whether the user can access the super admin')

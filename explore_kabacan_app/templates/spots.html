@@ -29,10 +29,10 @@
                     <td>{{ spot.date_added }}</td>
                     <td>{{ spot.category }}</td>
                     <td class="d-flex align-items-left justify-content-start gap-2">
-                        <a href="">
+                        <a href="{% url 'update_spot' pk=spot.id %}">
                             <i class="fas fa-pen"></i>
                         </a>
-                        <a href="">
+                        <a href="{% url 'delete_spot' pk=spot.id %}">
                             <i class="fas fa-trash text-danger"></i>
                         </a>
                     </td>

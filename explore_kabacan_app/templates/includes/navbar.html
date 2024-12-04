@@ -59,7 +59,7 @@
                                 </div>
                             </div>
                         </li>
-                        {% if request.user.is_staff or request.user.is_superuser %}
+                        {% if request.user.is_active and request.user.is_superuser %}
                         <li>
                             <a class="dropdown-item" href="/admin">Super Administrator</a>
                         </li>

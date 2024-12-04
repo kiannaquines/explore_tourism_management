@@ -2,16 +2,37 @@ from django import forms
 from explore_kabacan_app.models import *
 from django.contrib.auth.forms import UserCreationForm
 
+
+class PersonelTouristForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(PersonelTouristForm, self).__init__(*args, **kwargs)
+
+        if 'dob' in self.fields:
+            self.fields['dob'].label = 'Birth Date'
+
+        for field_name, field in self.fields.items():
+            field.widget.attrs.update({'class': 'form-control'})
+            field.widget.is_required = True
+
+    class Meta:
+        model = Tourist
+        fields = '__all__'
+        widgets = {
+            'dob': forms.DateInput({'type': 'date'}),
+        }
+        exclude = ('destination',)
+
+
 class CreateTouristForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(CreateTouristForm, self).__init__(*args, **kwargs)
 
         if 'dob' in self.fields:
-            self.fields['dob'].label = ''
+            self.fields['dob'].label = 'Birth Date'
 
         if 'gender' in self.fields:
             self.fields['gender'].choices = [('Male', 'Male'), ('Female', 'Female')]
-            self.fields['gender'].label = ''
+            self.fields['gender'].label = 'Gender'
         
         if 'destination' in self.fields:
             self.fields['destination'] = forms.ModelChoiceField(
@@ -19,7 +40,7 @@ class CreateTouristForm(forms.ModelForm):
                 empty_label=None,
                 widget=forms.Select(attrs={'class': 'form-control'})
             )
-            self.fields['destination'].label = ''
+            self.fields['destination'].label = 'Destination'
 
         for field_name, field in self.fields.items():
             field.widget.attrs.update({'class': 'form-control', 'placeholder': field_name  })
@@ -60,6 +81,20 @@ class LoginForm(forms.Form):
         'placeholder': 'Password',
     }))
 
+class UpdateUserForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(UpdateUserForm, self).__init__(*args, **kwargs)
+
+        for field_name, field in self.fields.items():
+            if isinstance(field.widget, forms.CheckboxInput):
+                field.widget.attrs.update({'class': 'form-check-input'})
+            else:
+                field.widget.attrs.update({'class': 'form-control'})
+
+    class Meta:
+        model = CustomUser
+        fields = ['username','email','first_name','last_name','assigned_to','is_active','is_staff','is_superuser']
+
 class UserForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super(UserForm, self).__init__(*args, **kwargs)
@@ -72,7 +107,7 @@ class UserForm(UserCreationForm):
 
     class Meta:
         model = CustomUser
-        fields = ['username','password1','password2','email','first_name','last_name', 'is_active','is_staff','is_superuser']
+        fields = ['username','password1','password2','email','first_name','last_name', 'assigned_to', 'is_active','is_staff','is_superuser']
 
 class CategoryForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):

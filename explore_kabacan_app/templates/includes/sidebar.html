@@ -25,6 +25,7 @@
             </button>
         </div>
     </div>
+    {% if request.user.is_superuser and request.user.is_active %}
     <div class="sidebar-wrapper scrollbar scrollbar-inner">
         <div class="sidebar-content">
             <ul class="nav nav-secondary">
@@ -80,7 +81,7 @@
                             </li>
                             <li>
                                 <a href="{% url 'add_category' %}">
-                                    <span class="sub-item">Create Tourist Category</span>
+                                    <span class="sub-item">Create Category</span>
                                 </a>
                             </li>
                         </ul>
@@ -128,7 +129,68 @@
                         </ul>
                     </div>
                 </li>
+
+                <li class="nav-item {% if 'report' in request.path %}submenu active{% endif %}">
+                    <a data-bs-toggle="collapse" href="#report" aria-expanded="true">
+                        <i class="fas fa-th-list"></i>
+                        <p>Report</p>
+                        <span class="caret"></span>
+                    </a>
+                    <div class="collapse {% if 'report' in request.path %}show{% endif %}" id="report">
+                        <ul class="nav nav-collapse">
+                            <li>
+                                <a href="{% url 'report' %}">
+                                    <span class="sub-item">Tourist Report</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
             </ul>
         </div>
     </div>
+    {% elif request.user.is_staff and request.user.is_active %}
+    <div class="sidebar-wrapper scrollbar scrollbar-inner">
+        <div class="sidebar-content">
+            <ul class="nav nav-secondary">
+                <li class="nav-item {% if 'dashboard' in request.path %}active{% endif %}">
+                    <a
+                        href="{% url 'dashboard' %}"
+                        class="collapsed"
+                    >
+                        <i class="fas fa-home"></i>
+                        <p>Dashboard</p>
+                    </a>
+                </li>
+                <li class="nav-section">
+                    <span class="sidebar-mini-icon">
+                        <i class="fa fa-ellipsis-h"></i>
+                    </span>
+                    <h4 class="text-section">MODULES</h4>
+                </li>
+                
+               
+                
+                <li class="nav-item {% if 'personel' in request.path %}submenu active{% endif %}">
+                    <a data-bs-toggle="collapse" href="#users" aria-expanded="true">
+                        <i class="fas fa-th-list"></i>
+                        <p>Tourist</p>
+                        <span class="caret"></span>
+                    </a>
+                    <div class="collapse {% if 'personel' in request.path %}show{% endif %}" id="users">
+                        <ul class="nav nav-collapse">
+                            <li>
+                                <a href="{% url 'personel_tourist_create' %}">
+                                    <span class="sub-item">Create Tourist</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+    {% endif %}
 </div>

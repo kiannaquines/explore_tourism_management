@@ -21,8 +21,28 @@
     <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}" />
     <link rel="stylesheet" href="{% static 'assets/css/plugins.min.css' %}" />
     <link rel="stylesheet" href="{% static 'assets/css/kaiadmin.min.css' %}" />
+    <style>
+      body {
+        background-image: url('{% static 'assets/img/bg.png' %}') !important;
+        background-size: cover !important;
+        background-position: right !important;
+        background-repeat: no-repeat !important;
+      }
+      
+      .container-login {
+        width: 100%;
+        max-width: 100%;
+      }
+
+      @media (min-width: 768px) {
+        .container-login {
+          width: 50%;
+          margin: 0 auto;
+        }
+      }
+    </style>
   </head>
-  <body class="login bg-primary">
+  <body class="login">
     <div class="wrapper wrapper-login">
       {% block auth_content %}{% endblock %}
     </div>

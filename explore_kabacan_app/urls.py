@@ -12,6 +12,7 @@ urlpatterns = [
     path("category/list", SpotCategoryView.as_view(), name="category"),
     path("tourist/list", TouristView.as_view(), name="toursit"),
     path("users/list", UsersView.as_view(), name="users"),
+    path("report/list", TouristReportView.as_view(), name="report"),
 
     # Add View
     path("users/add", AddUserView.as_view(), name="add_user"),
@@ -19,15 +20,18 @@ urlpatterns = [
     path("spot/add", AddSpotView.as_view(), name="add_spot"),
     path("category/add", AddCategorySpotView.as_view(), name="add_category"),
 
+
     # Update View
     path("tourist/update/<int:pk>", UpdateTouristView.as_view(), name="update_tourist"),
     path("spot/update/<int:pk>", UpdateSpotView.as_view(), name="update_spot"),
     path("category/update/<int:pk>",UpdateCategorySpotView.as_view(), name="update_category"),
+    path("user/update/<int:pk>",UpdateUserView.as_view(), name="update_user"),
 
     # Delete View
     path("tourist/delete/<int:pk>", DeleteTouristView.as_view(), name="delete_tourist"),
     path("spot/delete/<int:pk>", DeleteSpotView.as_view(), name="delete_spot"),
     path("category/delete/<int:pk>", DeleteCategorySpotView.as_view(), name="delete_category"),
+    path("user/delete/<int:pk>", DeleteUserView.as_view(), name="delete_user"),
 
     # chart json
     path('chart/age_distribution/', age_distribution, name="age_distribution"),
@@ -41,4 +45,5 @@ urlpatterns = [
 
     # tourist create 
     path('visitor/tourist/create', CreateTouristView.as_view(), name="visitor_tourist_create"),
+    path('personel/tourist/create', PersonelAddTouristView.as_view(), name="personel_tourist_create"),
 ]

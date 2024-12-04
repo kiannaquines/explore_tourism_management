@@ -27,10 +27,10 @@
                     <td>{{ category.category }}</td>
                     <td>{{ category.date_added }}</td>
                     <td class="d-flex align-items-left justify-content-start gap-2">
-                        <a href="">
+                        <a href="{% url 'update_category' pk=category.id %}">
                             <i class="fas fa-pen"></i>
                         </a>
-                        <a href="">
+                        <a href="{% url 'delete_category' pk=category.id %}">
                             <i class="fas fa-trash text-danger"></i>
                         </a>
                     </td>

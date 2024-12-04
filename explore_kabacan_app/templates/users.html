@@ -36,14 +36,17 @@
                         {% endif %}
                     </td>
                     <td>{{ user.date_joined }}</td>
-                    <td class="d-flex align-items-left justify-content-start gap-2">
-                        <a href="">
-                            <i class="fas fa-pen"></i>
-                        </a>
-                        <a href="">
-                            <i class="fas fa-trash text-danger"></i>
-                        </a>
+                    <td>
+                        <div class="d-flex align-items-center justify-content-start gap-2">
+                            <a href="{% url 'update_user' pk=user.id %}">
+                                <i class="fas fa-pen"></i>
+                            </a>
+                            <a href="{% url 'delete_user' pk=user.id %}">
+                                <i class="fas fa-trash text-danger"></i>
+                            </a>
+                        </div>
                     </td>
+
                 </tr>
                 {% endfor %}
             </tbody>

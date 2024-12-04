@@ -8,8 +8,7 @@
             <h6 class="op-7 mb-2">Explore Kabacan Tourist Management System</h6>
         </div>
         <div class="ms-md-auto py-2 py-md-0">
-            <button type="button" onclick="onReload()" class="btn btn-label-info btn-round">Reload</button>
-            <a href="{% url 'generate_pdf_report' %}" class="btn btn-label-success btn-round">Export Report</a>
+            <button type="button" onclick="onReload()" class="btn btn-primary btn-round">Reload Page</button>
         </div>
     </div>
     {% include './includes/message.html' %}
@@ -98,25 +97,11 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-12">
             <div class="card card-round">
                 <div class="card-header">
                     <div class="card-head-row">
                         <div class="card-title">Visitors Monthly</div>
-                        <div class="card-tools">
-                            <a href="#" class="btn btn-label-success btn-round btn-sm me-2">
-                                <span class="btn-label">
-                                    <i class="fa fa-pencil"></i>
-                                </span>
-                                Export
-                            </a>
-                            <a href="#" class="btn btn-label-info btn-round btn-sm">
-                                <span class="btn-label">
-                                    <i class="fa fa-print"></i>
-                                </span>
-                                Print
-                            </a>
-                        </div>
                     </div>
                 </div>
                 <div class="card-body">
@@ -126,7 +111,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-12">
             <div class="card card-round">
                 <div class="card-header">
                     <div class="card-head-row">
@@ -135,7 +120,7 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table align-items-center mb-0">
+                        <table class="table align-items-center mb-0" id="datatable">
                             <thead class="thead-light">
                                 <tr>
                                     <th scope="col" class="text-start">No</th>
@@ -164,25 +149,11 @@
                 <div class="card-header">
                     <div class="card-head-row">
                         <div class="card-title">Gender Distribution</div>
-                        <div class="card-tools">
-                            <a href="#" class="btn btn-label-success btn-round btn-sm me-2">
-                                <span class="btn-label">
-                                    <i class="fa fa-pencil"></i>
-                                </span>
-                                Export
-                            </a>
-                            <a href="#" class="btn btn-label-info btn-round btn-sm">
-                                <span class="btn-label">
-                                    <i class="fa fa-print"></i>
-                                </span>
-                                Print
-                            </a>
-                        </div>
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="chart-container">
-                        <div id="genderDistribution" style="height: 90%; width: 90%;" class="align-items-center d-flex justify-content-center"></div>
+                        <div id="genderDistribution" style="height: 85%; width: 85%;" class="align-items-center d-flex justify-content-center"></div>
                     </div>
                 </div>
             </div>
@@ -192,25 +163,11 @@
                 <div class="card-header">
                     <div class="card-head-row">
                         <div class="card-title">Age Distribution</div>
-                        <div class="card-tools">
-                            <a href="#" class="btn btn-label-success btn-round btn-sm me-2">
-                                <span class="btn-label">
-                                    <i class="fa fa-pencil"></i>
-                                </span>
-                                Export
-                            </a>
-                            <a href="#" class="btn btn-label-info btn-round btn-sm">
-                                <span class="btn-label">
-                                    <i class="fa fa-print"></i>
-                                </span>
-                                Print
-                            </a>
-                        </div>
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="chart-container">
-                        <div id="ageDistribution" style="height: 90%; width: 90%;"></div>
+                        <div id="ageDistribution" style="height: 83%; width: 83%;"></div>
                     </div>
                 </div>
             </div>

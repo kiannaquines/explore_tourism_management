@@ -13,10 +13,10 @@
     </div>
     <form method="post">
         {% csrf_token %}
-        <div class="alert alert-info">
+        <div class="alert alert-danger">
             Are you sure you want to remove this {{ context }} data, this action cannot be reverted.
         </div>
-        <input type="submit" value="{{ button }}" class="btn btn-primary mt-2">
+        <input type="submit" value="{{ button }}" class="btn btn-danger mt-2">
     </form>
 </div>
 {% endblock %}
