@@ -3,19 +3,39 @@
 
 {% block auth_content %}
 <div class="container container-login animated fadeIn">
+    {% include './includes/message.html' %}
     <h3 class="text-center">Sign Up</h3>
     <div class="login-form">
       <div class="form-sub">
-        <div class="form-floating form-floating-custom mb-3">
-          <input
-            id="fullname"
-            name="fullname"
-            type="text"
-            class="form-control"
-            placeholder="fullname"
-            required
-          />
-          <label for="fullname">Fullname</label>
+        <div class="row">
+          <div class="col">
+            <div class="form-floating form-floating-custom mb-3">
+              <input
+                id="firstname"
+                name="firstname"
+                type="text"
+                class="form-control"
+                placeholder="firstname"
+                required
+              />
+              <label for="firstname">Firstname</label>
+            </div>
+          </div>
+
+          <div class="col">
+            <div class="form-floating form-floating-custom mb-3">
+              <input
+                id="lastname"
+                name="lastname"
+                type="text"
+                class="form-control"
+                placeholder="lastname"
+                required
+              />
+              <label for="lastname">Lastname</label>
+            </div>
+          </div>
+
         </div>
         <div class="form-floating form-floating-custom mb-3">
           <input
@@ -59,15 +79,18 @@
       </div>
       <div class="row form-sub m-0">
         <div class="form-check">
-          <input type="checkbox" class="form-check-input" name="agree" id="agree" />
+          <input type="checkbox" class="form-check-input" name="agree" id="agree" checked />
           <label class="form-check-label" for="agree"
             >I Agree the terms and conditions.</label
           >
         </div>
       </div>
-      <div class="form-action">
-        <a href="#" id="show-signin" class="btn btn-danger btn-link btn-login me-3">Cancel</a>
-        <a href="#" class="btn btn-primary btn-login">Sign Up</a>
+      <div class="form-action mb-3">
+        <button type="submit" class="btn btn-primary w-100 btn-login">Sign Up</button>
+      </div>
+      <div class="login-account">
+        <span class="msg">Already have an account ?</span>
+        <a href="{% url 'login' %}" class="link">Sign In</a>
       </div>
     </div>
   </div>

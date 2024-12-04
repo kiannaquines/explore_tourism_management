@@ -86,13 +86,13 @@
                         </ul>
                     </div>
                 </li>
-                <li class="nav-item {% if 'toursit' in request.path %}submenu active{% endif %}">
+                <li class="nav-item {% if 'tourist' in request.path %}submenu active{% endif %}">
                     <a data-bs-toggle="collapse" href="#users" aria-expanded="true">
                         <i class="fas fa-th-list"></i>
                         <p>Tourist</p>
                         <span class="caret"></span>
                     </a>
-                    <div class="collapse {% if 'toursit' in request.path %}show{% endif %}" id="users">
+                    <div class="collapse {% if 'tourist' in request.path %}show{% endif %}" id="users">
                         <ul class="nav nav-collapse">
                             <li>
                                 <a href="{% url 'toursit' %}">

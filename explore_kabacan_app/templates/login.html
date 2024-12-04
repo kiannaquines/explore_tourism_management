@@ -4,6 +4,7 @@
 {% block auth_content %}
 <div class="container container-login animated fadeIn">
     <h3 class="text-center">Sign In</h3>
+    {% include './includes/message.html' %}
     <div class="login-form">
       <div class="form-sub">
         <div class="form-floating form-floating-custom mb-3">
@@ -35,7 +36,7 @@
       <div class="row m-0">
         <div class="d-flex form-sub">
           <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="rememberme" />
+            <input type="checkbox" class="form-check-input" id="rememberme" checked />
             <label class="form-check-label" for="rememberme">Remember Me</label>
           </div>
 
@@ -43,11 +44,11 @@
         </div>
       </div>
       <div class="form-action mb-3">
-        <a href="#" class="btn btn-primary w-100 btn-login">Sign In</a>
+        <button type="submit" class="btn btn-primary w-100 btn-login">Sign In</button>
       </div>
       <div class="login-account">
         <span class="msg">Don't have an account yet ?</span>
-        <a href="#" id="show-signup" class="link">Sign Up</a>
+        <a href="{% url 'register' %}" class="link">Sign Up</a>
       </div>
     </div>
   </div>
