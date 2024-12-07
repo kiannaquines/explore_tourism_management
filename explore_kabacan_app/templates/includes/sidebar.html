@@ -1,20 +1,20 @@
 {% load static %}
-<div class="sidebar" data-background-color="dark">
+<div class="sidebar" data-background-color="white">
     <div class="sidebar-logo">
-        <div class="logo-header" data-background-color="dark">
+        <div class="logo-header" data-background-color="white">
             <a href="#" class="logo d-flex justify-content-center align-items-center">
                 <img
-                    src="{% static 'assets/img/EXPLORE KABACAN.svg' %}"
+                    src="{% static 'assets/img/explore_kabacan.png' %}"
                     alt="navbar brand"
                     class="navbar-brand mt-3 mr-4"
-                    height="90%"
+                    height="70%"
                     width="100%"
                     style="object-fit: cover;"
                 >
             </a>
             <div class="nav-toggle">
                 <button class="btn btn-toggle toggle-sidebar">
-                    <i class="gg-menu-right"></i>
+                    <i class="fas fa-bars"></i>
                 </button>
                 <button class="btn btn-toggle sidenav-toggler">
                     <i class="gg-menu-left"></i>
@@ -47,7 +47,7 @@
                 
                 <li class="nav-item {% if 'spot' in request.path %}submenu active{% endif %}">
                     <a data-bs-toggle="collapse" href="#tourist" aria-expanded="true">
-                        <i class="fas fa-th-list"></i>
+                        <i class="fas fa-location-arrow"></i>
                         <p>Tourism Spot</p>
                         <span class="caret"></span>
                     </a>
@@ -68,7 +68,7 @@
                 </li>
                 <li class="nav-item {% if 'category' in request.path %}submenu active{% endif %}">
                     <a data-bs-toggle="collapse" href="#category" aria-expanded="true">
-                        <i class="fas fa-th-list"></i>
+                        <i class="fas fa-map-marked"></i>
                         <p>Category</p>
                         <span class="caret"></span>
                     </a>
@@ -89,7 +89,7 @@
                 </li>
                 <li class="nav-item {% if 'tourist' in request.path %}submenu active{% endif %}">
                     <a data-bs-toggle="collapse" href="#users" aria-expanded="true">
-                        <i class="fas fa-th-list"></i>
+                        <i class="far fa-user"></i>
                         <p>Tourist</p>
                         <span class="caret"></span>
                     </a>
@@ -110,7 +110,7 @@
                 </li>
                 <li class="nav-item {% if 'users' in request.path %}submenu active{% endif %}">
                     <a data-bs-toggle="collapse" href="#usermodule" aria-expanded="true">
-                        <i class="fas fa-th-list"></i>
+                        <i class="far fa-user"></i>
                         <p>User</p>
                         <span class="caret"></span>
                     </a>
@@ -132,7 +132,7 @@
 
                 <li class="nav-item {% if 'report' in request.path %}submenu active{% endif %}">
                     <a data-bs-toggle="collapse" href="#report" aria-expanded="true">
-                        <i class="fas fa-th-list"></i>
+                        <i class="far fa-file-pdf"></i>
                         <p>Report</p>
                         <span class="caret"></span>
                     </a>

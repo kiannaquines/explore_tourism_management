@@ -62,13 +62,18 @@ class RegisterForm(UserCreationForm):
         self.fields['email'].label = 'Email Address'
         self.fields['password1'].label = 'Password'
         self.fields['password2'].label = 'Confrim Password'
-        
+        self.fields['assigned_to'].label = 'Designation Tourist Spot'
+        self.fields['assigned_to'] = forms.ModelChoiceField(
+            queryset=Spot.objects.all(),
+            empty_label=None,
+            widget=forms.Select(attrs={'class': 'form-control'})
+        )
         for field_name, field in self.fields.items():
             field.widget.attrs.update({'class': 'form-control',         'placeholder': field.label })
             
     class Meta:
         model = CustomUser
-        fields = ["username", "first_name", "last_name", "email", "password1", "password2"]
+        fields = ["username", "first_name", "last_name", "email","assigned_to", "password1", "password2"]
 
 
 class LoginForm(forms.Form):

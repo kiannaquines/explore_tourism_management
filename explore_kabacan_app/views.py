@@ -374,7 +374,7 @@ class DashboardView(CustomLoginRequiredMixin, View):
 
         context["most_visited_spot"] = Spot.objects.annotate(
             visit_count=Count("tourist")
-        ).order_by("-visit_count")[:6]
+        ).order_by("-visit_count")[:10]
         return render(request, self.template_name, context)
 
 

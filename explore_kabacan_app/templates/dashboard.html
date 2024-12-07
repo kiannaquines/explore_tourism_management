@@ -2,24 +2,46 @@
 
 {% block content %}
 <div class="page-inner">
-    <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
+    {% include './includes/message.html' %}
+    <div class="d-flex align-items-left justify-content-between align-items-md-center flex-column flex-md-row pt-2 pb-4">
         <div>
-            <h3 class="fw-bold mb-3">Explore Kabacan Dashboard</h3>
+            <h6 class="fw-bold" id="current_date">Saturday, December 7, 2024</h6>
+            <h3 class="fw-bold">Explore Kabacan Dashboard</h3>
             <h6 class="op-7 mb-2">Explore Kabacan Tourist Management System</h6>
         </div>
         <div class="ms-md-auto py-2 py-md-0">
             <button type="button" onclick="onReload()" class="btn btn-primary btn-round">Reload Page</button>
         </div>
     </div>
-    {% include './includes/message.html' %}
     <div class="row">
         <div class="col-sm-6 col-md-3">
             <div class="card card-stats card-round">
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col-icon">
-                            <div class="icon-big text-center icon-primary bubble-shadow-small">
-                                <i class="fas fa-users"></i>
+                            <div class="icon-big text-center bubble-shadow-small">
+                                <i class="fas fa-map-marked text-success"></i>
+                            </div>
+                        </div>
+                        <div class="col col-stats ms-3 ms-sm-0">
+                            <div class="numbers">
+                                <p class="card-category">Spot Category</p>
+                                <h4 class="card-title">
+                                    {{ count_total_category }}
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <div class="card card-stats card-round">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-icon">
+                            <div class="icon-big text-center bubble-shadow-small">
+                                <i class="fas fa-users text-success"></i>
                             </div>
                         </div>
                         <div class="col col-stats ms-3 ms-sm-0">
@@ -37,8 +59,8 @@
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col-icon">
-                            <div class="icon-big text-center icon-info bubble-shadow-small">
-                                <i class="fas fa-user-check"></i>
+                            <div class="icon-big text-center bubble-shadow-small">
+                                <i class="fas fa-user-check text-success"></i>
                             </div>
                         </div>
                         <div class="col col-stats ms-3 ms-sm-0">
@@ -58,8 +80,8 @@
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col-icon">
-                            <div class="icon-big text-center icon-success bubble-shadow-small">
-                                <i class="fas fa-luggage-cart"></i>
+                            <div class="icon-big text-center bubble-shadow-small">
+                                <i class="fas fa-location-arrow text-success"></i>
                             </div>
                         </div>
                         <div class="col col-stats ms-3 ms-sm-0">
@@ -74,34 +96,13 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-md-3">
-            <div class="card card-stats card-round">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col-icon">
-                            <div class="icon-big text-center icon-secondary bubble-shadow-small">
-                                <i class="far fa-check-circle"></i>
-                            </div>
-                        </div>
-                        <div class="col col-stats ms-3 ms-sm-0">
-                            <div class="numbers">
-                                <p class="card-category">Spot Category</p>
-                                <h4 class="card-title">
-                                    {{ count_total_category }}
-                                </h4>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
     <div class="row">
         <div class="col-md-12">
             <div class="card card-round">
                 <div class="card-header">
                     <div class="card-head-row">
-                        <div class="card-title">Visitors Monthly</div>
+                        <div class="card-title">Monthly Visitors</div>
                     </div>
                 </div>
                 <div class="card-body">
@@ -115,7 +116,7 @@
             <div class="card card-round">
                 <div class="card-header">
                     <div class="card-head-row">
-                        <div class="card-title">6 Most Visited Spot</div>
+                        <div class="card-title">10 Most Visited Spot</div>
                     </div> 
                 </div>
                 <div class="card-body">
@@ -197,10 +198,10 @@
                                 {% for visitor_history in visitors_history %}
                                 <tr>
                                     <th scope="row">
-                                        <button class="btn btn-icon btn-round btn-success btn-sm me-2">
+                                        <button class="btn btn-icon btn-round btn-primary btn-sm me-1">
                                             <i class="fa fa-check"></i>
                                         </button>
-                                        {{ visitor_history.get_full_name }} visits {{ visitor_history.destination }}
+                                        {{ visitor_history.get_full_name }} visits {{ visitor_history.destination|truncatechars:5 }}
                                     </th>
                                     <td class="text-end">{{ visitor_history.visit_date }} </td>
                                     <td class="text-end">

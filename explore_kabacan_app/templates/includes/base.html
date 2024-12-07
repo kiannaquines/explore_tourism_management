@@ -27,6 +27,52 @@
         <link rel="stylesheet" href="{% static 'assets/css/plugins.min.css' %}">
         <link rel="stylesheet" href="{% static 'assets/css/kaiadmin.min.css' %}">
         <link href="https://cdn.datatables.net/v/bs5/dt-2.1.8/datatables.min.css" rel="stylesheet">
+        <style>
+            .btn-primary {
+                background-color: #106F3B !important;
+                border-color: #106F3B !important;
+            }
+
+            .btn-primary:hover {
+                background-color: #0D522B !important;
+                border-color: #0D522B !important;
+                opacity: 0.8;
+            }
+
+            .badge-success {
+                background-color: #106F3B !important;
+                border-color: #106F3B !important;
+            }
+
+
+            .text-success { 
+                color: #106F3B !important;
+            }
+
+            .text-success:hover { 
+                color: #106F3B !important;
+                opacity: 0.8 !important;
+
+                cursor: pointer;
+            }
+
+            .alert-success {
+                border-color: #106F3B !important;
+            }
+
+            select option:checked {
+                background-color: #106F3B !important;
+                color: #fff !important;
+            }
+
+            select option:hover {
+                background-color: #106F3B !important;
+                opacity: 0.8 !important;
+                color: #fff !important;
+            }
+
+
+        </style>
     </head>
     <body>
         <div class="wrapper">
@@ -79,7 +125,6 @@
             <script src="{% static 'assets/js/plugin/sweetalert/sweetalert.min.js' %}"></script>
             <script src="{% static 'assets/js/kaiadmin.min.js' %}"></script>
             <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-
             <script>
             if ($("#datatable".length > 0)) {
                 $("#datatable").DataTable()
@@ -96,9 +141,11 @@
                         name: 'Visitors',
                         data: counts
                     }],
+                    colors:['#106F3B'],
                     chart: {
                         height: 350,
-                        type: 'area'
+                        type: 'area',
+                        fontFamily: 'Public Sans'
                     },
                     dataLabels: {
                         enabled: false
@@ -132,7 +179,9 @@
                     series: genderData,
                     chart: {
                         type: 'donut',
+                        fontFamily: 'Public Sans'
                     },
+                    colors: ['#106F3B','#3bbf5c'],
                     labels: genderLabels,
                     responsive: [{
                         breakpoint: 480,
@@ -163,7 +212,9 @@
                     series: ageData,
                     chart: {
                         type: 'donut',
+                        fontFamily: 'Public Sans'
                     },
+                    colors:['#106F3B','#3bbf5c','#d2fba4','#5eb229'],
                     labels: ageLabels,
                     responsive: [{
                         breakpoint: 480,
@@ -188,10 +239,31 @@
                 window.history.back();
             }
 
+            function updateCurrentDateTime() {
+                const date = new Date();
+
+                const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                const formattedDate = date.toLocaleDateString('en-US', dateOptions);
+
+                const hours = date.getHours();
+                const minutes = date.getMinutes().toString().padStart(2, '0');
+                const ampm = hours >= 12 ? 'PM' : 'AM';
+                const formattedTime = `${hours % 12 || 12}:${minutes} ${ampm}`;
+
+                const dateTimeString = `${formattedDate}, ${formattedTime}`;
+
+                const dateElement = document.getElementById('current_date');
+                if (dateElement) {
+                    dateElement.textContent = dateTimeString;
+                }
+            }
+
+            setInterval(updateCurrentDateTime, 1000)
+
 
             function onReload(){
                 window.location.reload();
-            }
+            }          
             </script>
         </body>
     </html>

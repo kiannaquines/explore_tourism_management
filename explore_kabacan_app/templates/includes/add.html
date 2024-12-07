@@ -7,9 +7,6 @@
             <h3 class="fw-bold mb-3">{{ name }}</h3>
             <h6 class="op-7 mb-2">Create your new data here</h6>
         </div>
-        <div class="ms-md-auto py-2 py-md-0">
-            <button href="#" onclick="onBack()" class="btn btn-label-info btn-round me-2">Back</button>
-        </div>
     </div>
     <div class="card p-3">
         <form method="post">
@@ -34,6 +31,7 @@
             {% endfor %}
             <div class="form-group">
                 <input type="submit" value="{{ button }}" class="btn btn-primary mt-2">
+                <input type="button" onclick="onBack()" value="Back" class="btn btn-secondary mt-2">
             </div>
         </form>
     </div>
