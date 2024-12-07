@@ -10,7 +10,8 @@
     </div>
     {% include './includes/message.html' %}
     <div class="card p-3">
-        <form action="{% url 'generate_pdf_report' %}" method="GET">
+        <form method="POST">
+            {% csrf_token %}
             <div class="row d-flex align-items-center justify-content-between">
                 <div class="col-md-6">
                     <div class="form-group">

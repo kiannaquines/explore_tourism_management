@@ -17,12 +17,11 @@ from django.db.models import Count
 from django.db.models.functions import ExtractYear, TruncMonth
 import plotly.io as pio
 import plotly.graph_objects as go
-from reportlab.lib.utils import ImageReader
-from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Image
 from reportlab.lib.units import inch
 from django.contrib.auth import login, logout, authenticate
+from django.db.models.functions import TruncDate
+
+from explore_kabacan_app.pdf_builder import pdf_builder
 
 
 class CreateTouristView(CreateView):
@@ -34,7 +33,9 @@ class CreateTouristView(CreateView):
     def form_valid(self, form):
         valid_form = super().form_valid(form)
         messages.success(
-            self.request, "You have successfully created your tourist information, please come again.", extra_tags="success"
+            self.request,
+            "You have successfully created your tourist information, please come again.",
+            extra_tags="success",
         )
         return valid_form
 
@@ -49,7 +50,7 @@ class CreateTouristView(CreateView):
         context["name"] = "Create My Tourist Information"
         context["button"] = "Continue"
         return context
-    
+
 
 class LoginView(View):
     template_name = "login.html"
@@ -57,7 +58,7 @@ class LoginView(View):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             return redirect("dashboard")
-        
+
         form = LoginForm()
         return render(request, self.template_name, {"form": form})
 
@@ -70,23 +71,37 @@ class LoginView(View):
             try:
                 user = CustomUser.objects.get(username=username)
                 if not user.is_active:
-                    messages.error(request, "Your account is inactive. Please contact support.", extra_tags="danger")
+                    messages.error(
+                        request,
+                        "Your account is inactive. Please contact support.",
+                        extra_tags="danger",
+                    )
                     return render(request, self.template_name, {"form": form})
             except CustomUser.DoesNotExist:
-                messages.error(request, "No user found with your username, please try again.", extra_tags="danger")
+                messages.error(
+                    request,
+                    "No user found with your username, please try again.",
+                    extra_tags="danger",
+                )
                 return render(request, self.template_name, {"form": form})
 
             user = authenticate(request, username=username, password=password)
 
             if user is not None:
                 login(request, user)
-                messages.success(request, "You have successfully logged in.", extra_tags="success")
+                messages.success(
+                    request, "You have successfully logged in.", extra_tags="success"
+                )
                 return redirect("dashboard")
             else:
-                messages.error(request, "Invalid username or password.", extra_tags="danger")
+                messages.error(
+                    request, "Invalid username or password.", extra_tags="danger"
+                )
         else:
-            messages.error(request, "Please correct the errors below.", extra_tags="danger")
-        
+            messages.error(
+                request, "Please correct the errors below.", extra_tags="danger"
+            )
+
         return render(request, self.template_name, {"form": form})
 
 
@@ -96,9 +111,9 @@ class RegisterView(View):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             return redirect("dashboard")
-        
+
         register_form = RegisterForm()
-        return render(request, self.template_name, {'form':register_form})
+        return render(request, self.template_name, {"form": register_form})
 
     def post(self, request, *args, **kwargs):
         form = RegisterForm(request.POST)
@@ -125,8 +140,8 @@ def logout_user(request):
     return HttpResponseRedirect(reverse_lazy("login"))
 
 
-def create_pie_chart(data, labels, title):
-    fig = go.Figure(data=[go.Pie(labels=labels, values=data, hole=0.3)])
+def create_pie_chart(data, label, title):
+    fig = go.Figure(data=[go.Pie(labels=label, values=data, hole=0.7)])
     fig.update_layout(title=title)
 
     buf = BytesIO()
@@ -135,8 +150,9 @@ def create_pie_chart(data, labels, title):
     return buf
 
 
-def create_bar_chart(monthly_data):
-    month_names = [
+def create_bar_chart(
+    data,
+    label=[
         "Jan",
         "Feb",
         "Mar",
@@ -149,14 +165,18 @@ def create_bar_chart(monthly_data):
         "Oct",
         "Nov",
         "Dec",
-    ]
+    ],
+    title="Monthly Visitors",
+    xaxis="Month",
+    yaxis="Visitor Count",
+):
 
-    fig = go.Figure(data=[go.Bar(x=month_names, y=monthly_data)])
+    fig = go.Figure(data=[go.Bar(x=label, y=data)])
 
     fig.update_layout(
-        title="Monthly Visitors",
-        xaxis_title="Month",
-        yaxis_title="Visitor Count",
+        title=title,
+        xaxis_title=xaxis,
+        yaxis_title=yaxis,
     )
 
     buf = BytesIO()
@@ -167,12 +187,14 @@ def create_bar_chart(monthly_data):
 
 def generate_pdf_report(request):
     if request.method == "GET":
-        start_date = request.GET.get('start_date')
-        end_date = request.GET.get('end_date')
+        start_date = request.GET.get("start_date")
+        end_date = request.GET.get("end_date")
 
-        gender_counts = Tourist.objects.filter(
-            visit_date__range=(start_date, end_date)
-        ).values("gender").annotate(count=Count("gender"))
+        gender_counts = (
+            Tourist.objects.filter(visit_date__range=(start_date, end_date))
+            .values("gender")
+            .annotate(count=Count("gender"))
+        )
         gender_data = [gender["count"] for gender in gender_counts]
         gender_labels = [gender["gender"] for gender in gender_counts]
         gender_chart_buf = create_pie_chart(
@@ -181,7 +203,9 @@ def generate_pdf_report(request):
 
         today = datetime.today()
         age_data = {"0-18": 0, "19-30": 0, "31-40": 0, "41-50": 0, "51+": 0}
-        for tourist in Tourist.objects.filter(visit_date__range=(start_date, end_date)).all():
+        for tourist in Tourist.objects.filter(
+            visit_date__range=(start_date, end_date)
+        ).all():
             age = today.year - tourist.dob.year
             if age <= 18:
                 age_data["0-18"] += 1
@@ -193,12 +217,14 @@ def generate_pdf_report(request):
                 age_data["41-50"] += 1
             else:
                 age_data["51+"] += 1
+
         age_chart_buf = create_pie_chart(
             list(age_data.values()), list(age_data.keys()), "Age Distribution"
         )
 
         monthly_visitors = (
-            Tourist.objects.filter(visit_date__range=(start_date, end_date)).values("visit_date__month")
+            Tourist.objects.filter(visit_date__range=(start_date, end_date))
+            .values("visit_date__month")
             .annotate(count=Count("id"))
             .order_by("visit_date__month")
         )
@@ -210,8 +236,10 @@ def generate_pdf_report(request):
 
         monthly_chart_buf = create_bar_chart(monthly_data)
 
-        spot_counts = Tourist.objects.filter(visit_date__range=(start_date, end_date)).values("destination__spot").annotate(
-            count=Count("id")
+        spot_counts = (
+            Tourist.objects.filter(visit_date__range=(start_date, end_date))
+            .values("destination__spot")
+            .annotate(count=Count("id"))
         )
         spot_data = [spot["count"] for spot in spot_counts]
         spot_labels = [spot["destination__spot"] for spot in spot_counts]
@@ -219,84 +247,14 @@ def generate_pdf_report(request):
             spot_data, spot_labels, "Most Visitors Distribution per Spot"
         )
 
-        response = HttpResponse(content_type="application/pdf")
-        response["Content-Disposition"] = 'attachment; filename="tourist_report.pdf"'
+        chart_buffers = [
+            (gender_chart_buf),
+            (age_chart_buf),
+            (monthly_chart_buf),
+            (spot_chart_buf),
+        ]
 
-        buffer = io.BytesIO()
-
-        doc = SimpleDocTemplate(
-            buffer,
-            rightMargin=40,
-            leftMargin=40,
-            topMargin=10,
-            bottomMargin=72,
-            pagesize=letter,
-        )
-
-        doc.title = "Statiscal Document for Explore Kabacan"
-        elements = []
-
-        styles = getSampleStyleSheet()
-        normal_style = styles["Normal"]
-        header_style = ParagraphStyle(
-            "Header",
-            parent=styles["Heading1"],
-            fontSize=13,
-            spaceAfter=0,
-            alignment=1,
-            textColor=colors.black,
-        )
-
-        title = Paragraph("Explore Kabacan Management System", header_style)
-        third_title = Paragraph(
-            f"Date Generated: {today.strftime('%Y-%m-%d')}", header_style
-        )
-        second_title = Paragraph("Tourist Report", header_style)
-        elements.append(title)
-        elements.append(third_title)
-        elements.append(second_title)
-
-        elements.append(Paragraph("<br />", normal_style))
-
-        gender_image = ImageReader(gender_chart_buf)
-        gender_width, gender_height = gender_image.getSize()
-        aspect_ratio = gender_height / gender_width
-        new_width = 440
-        new_height = new_width * aspect_ratio
-        gender_chart = Image(gender_chart_buf, width=new_width, height=new_height)
-        elements.append(gender_chart)
-
-        age_image = ImageReader(age_chart_buf)
-        age_width, age_height = age_image.getSize()
-        aspect_ratio = age_height / age_width
-        new_width = 440
-        new_height = new_width * aspect_ratio
-        age_chart = Image(age_chart_buf, width=new_width, height=new_height)
-        elements.append(age_chart)
-
-        monthly_image = ImageReader(monthly_chart_buf)
-        monthly_width, monthly_height = monthly_image.getSize()
-        aspect_ratio = monthly_height / monthly_width
-        new_width = 440
-        new_height = new_width * aspect_ratio
-        monthly_chart = Image(monthly_chart_buf, width=new_width, height=new_height)
-        elements.append(monthly_chart)
-
-        spot_image = ImageReader(spot_chart_buf)
-        spot_width, spot_height = spot_image.getSize()
-        aspect_ratio = spot_height / spot_width
-        new_width = 440
-        new_height = new_width * aspect_ratio
-        spot_chart = Image(spot_chart_buf, width=new_width, height=new_height)
-        elements.append(spot_chart)
-
-        doc.build(elements)
-
-        pdf = buffer.getvalue()
-        buffer.close()
-
-        response.write(pdf)
-        return response
+        return pdf_builder(chart_buffers)
 
 
 def monthly_visitors_count(request):
@@ -370,7 +328,9 @@ class DashboardView(CustomLoginRequiredMixin, View):
                 destination=request.user.assigned_to
             ).order_by("-visit_date")[:20]
         else:
-            context["visitors_history"] = Tourist.objects.all().order_by("-visit_date")[:20]
+            context["visitors_history"] = Tourist.objects.all().order_by("-visit_date")[
+                :20
+            ]
 
         context["most_visited_spot"] = Spot.objects.annotate(
             visit_count=Count("tourist")
@@ -381,13 +341,13 @@ class DashboardView(CustomLoginRequiredMixin, View):
         ).order_by("-visit_count")[:10]
 
         chart_data = [
-            {"name": spot.spot, "y": spot.visit_count}
-            for spot in most_visited_spots
+            {"name": spot.spot, "y": spot.visit_count} for spot in most_visited_spots
         ]
 
         context["chart_data"] = chart_data
 
         return render(request, self.template_name, context)
+
 
 class MostVisitedByTouristPerSpotReportView(CustomLoginRequiredMixin, View):
     template_name = "report_tourist_per_spot.html"
@@ -396,13 +356,45 @@ class MostVisitedByTouristPerSpotReportView(CustomLoginRequiredMixin, View):
         context = {}
         context["items"] = Spot.objects.all()
         return render(request, self.template_name, context)
+    
+    def post(self, request):
+        destination_id = request.POST.get("spot_name")
+        destination = Spot.objects.get(pk=destination_id)
+        daily_visits = (
+            Tourist.objects.filter(destination_id=destination_id)
+            .annotate(visit_day=TruncDate("visit_date"))
+            .values("visit_day")
+            .annotate(total_visits=Count("id"))
+            .order_by("visit_day")
+        )
+
+        spot_data = [visit["total_visits"] for visit in daily_visits]
+        spot_labels = [visit["visit_day"].strftime("%Y-%m-%d") for visit in daily_visits]
+
+
+        per_spot_pie_chart = create_pie_chart(
+            data=spot_data,
+            label=spot_labels,
+            title=f"Pie Chart of Visitors in {destination.spot}",
+        )
+
+        per_spot_bar_chart = create_bar_chart(
+            data=spot_data,
+            label=spot_labels,
+            title=f"Bar Chart of Visitors in {destination.spot}",
+        )
+
+        chart_bufs = [(per_spot_pie_chart),(per_spot_bar_chart)]
+
+        return pdf_builder(chart_bufs, pdf_title="Per Tourist Spot Report", output_filename="per_tourist_spot_report.pdf")
+
 
 class AnnuallyTouristReportView(CustomLoginRequiredMixin, View):
     template_name = "annually_report.html"
 
     def get(self, request, *args, **kwargs):
         context = {}
-        context["tourists"] = Tourist.objects.all().order_by('-visit_date')
+        context["tourists"] = Tourist.objects.all().order_by("-visit_date")
         return render(request, self.template_name, context)
 
 
@@ -411,7 +403,7 @@ class MonthlyTouristReportView(CustomLoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         context = {}
-        context["tourists"] = Tourist.objects.all().order_by('-visit_date')
+        context["tourists"] = Tourist.objects.all().order_by("-visit_date")
         return render(request, self.template_name, context)
 
 
@@ -420,7 +412,7 @@ class TouristWeeklyReportView(CustomLoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         context = {}
-        context["tourists"] = Tourist.objects.all().order_by('-visit_date')
+        context["tourists"] = Tourist.objects.all().order_by("-visit_date")
         return render(request, self.template_name, context)
 
 
@@ -429,8 +421,39 @@ class SpotView(CustomLoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         context = {}
-        context["tourist_spot"] = Spot.objects.all().order_by('-date_added')
+        context["tourist_spot"] = Spot.objects.all().order_by("-date_added")
         return render(request, self.template_name, context)
+
+    def post(self, request):
+        get_all_most_visited_spot = (
+            Tourist.objects.values("destination__spot")
+            .annotate(visit_count=Count("id"))
+            .order_by("-visit_count")[:15]
+        )
+
+        spot_data = [spot["visit_count"] for spot in get_all_most_visited_spot]
+        spot_labels = [spot["destination__spot"] for spot in get_all_most_visited_spot]
+
+        most_visited_spot_bar_chart = create_bar_chart(
+            data=spot_data,
+            label=spot_labels,
+            title="Most Visited Spots",
+            yaxis="Visitor Count",
+            xaxis="Tourist Spot",
+        )
+
+
+        most_visited_spot_pie_chart = create_pie_chart(
+            data=spot_data,
+            label=spot_labels,
+            title="Most Visited Spots",
+        )
+
+
+
+        chart_bufs = [(most_visited_spot_bar_chart), (most_visited_spot_pie_chart)]
+
+        return pdf_builder(chart_bufs, pdf_title="Tourist Spot Report", output_filename="most_visited_spots.pdf")
 
 
 class SpotCategoryView(CustomLoginRequiredMixin, View):
@@ -438,7 +461,7 @@ class SpotCategoryView(CustomLoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         context = {}
-        context["categories"] = SpotCategory.objects.all().order_by('-date_added')
+        context["categories"] = SpotCategory.objects.all().order_by("-date_added")
         return render(request, self.template_name, context)
 
 
@@ -447,7 +470,7 @@ class UsersView(CustomLoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         context = {}
-        context["users"] = CustomUser.objects.all().order_by('-date_joined')
+        context["users"] = CustomUser.objects.all().order_by("-date_joined")
         return render(request, self.template_name, context)
 
 
@@ -456,7 +479,7 @@ class TouristView(CustomLoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         context = {}
-        context["tourists"] = Tourist.objects.all().order_by('-visit_date')
+        context["tourists"] = Tourist.objects.all().order_by("-visit_date")
         return render(request, self.template_name, context)
 
 
@@ -511,7 +534,6 @@ class PersonelAddTouristView(CustomLoginRequiredMixin, CreateView):
         context["name"] = "Create New Tourist"
         context["button"] = "Create Tourist"
         return context
-
 
 
 class AddSpotView(CustomLoginRequiredMixin, CreateView):
@@ -757,9 +779,8 @@ class DeleteCategorySpotView(CustomLoginRequiredMixin, DeleteView):
         return context
 
 
-
 class UpdateUserView(CustomLoginRequiredMixin, UpdateView):
-    pk_url_kwarg = 'pk'
+    pk_url_kwarg = "pk"
     form_class = UpdateUserForm
     template_name = "includes/add.html"
     model = CustomUser
@@ -767,7 +788,9 @@ class UpdateUserView(CustomLoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         valid_form = super().form_valid(form)
-        messages.success(self.request, "User updated successfully.", extra_tags="success")
+        messages.success(
+            self.request, "User updated successfully.", extra_tags="success"
+        )
         return valid_form
 
     def form_invalid(self, form: BaseModelForm) -> HttpResponse:
@@ -781,17 +804,19 @@ class UpdateUserView(CustomLoginRequiredMixin, UpdateView):
         context["name"] = "Update User"
         context["button"] = "Save Changes"
         return context
-    
+
 
 class DeleteUserView(CustomLoginRequiredMixin, DeleteView):
-    pk_url_kwarg = 'pk'
+    pk_url_kwarg = "pk"
     template_name = "includes/delete.html"
     model = CustomUser
     success_url = reverse_lazy("users")
 
     def form_valid(self, form):
         valid_form = super().form_valid(form)
-        messages.success(self.request, "User removed successfully.", extra_tags="success")
+        messages.success(
+            self.request, "User removed successfully.", extra_tags="success"
+        )
         return valid_form
 
     def form_invalid(self, form: BaseModelForm) -> HttpResponse:
