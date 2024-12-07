@@ -143,7 +143,8 @@
                     }],
                     colors:['#106F3B'],
                     chart: {
-                        height: 350,
+                        height: 280,
+                        width: '100%',
                         type: 'area',
                         fontFamily: 'Public Sans'
                     },
@@ -181,7 +182,7 @@
                         type: 'donut',
                         fontFamily: 'Public Sans'
                     },
-                    colors: ['#106F3B','#3bbf5c'],
+                    colors: ['#d2fba4', '#5eb229', '#f5a623'],
                     labels: genderLabels,
                     responsive: [{
                         breakpoint: 480,
@@ -214,7 +215,7 @@
                         type: 'donut',
                         fontFamily: 'Public Sans'
                     },
-                    colors:['#106F3B','#3bbf5c','#d2fba4','#5eb229'],
+                    colors:['#f56a79', '#a0c8e4', '#7b8d45', '#bfb3cd', '#f27c4e'],
                     labels: ageLabels,
                     responsive: [{
                         breakpoint: 480,
@@ -233,7 +234,6 @@
                 ageDistributionChart.render();
             })
             .catch(error => console.error('Error fetching age distribution data:', error));
-
 
             function onBack() {
                 window.history.back();
@@ -265,5 +265,6 @@
                 window.location.reload();
             }          
             </script>
+            {% block specfic_js %}{% endblock %}
         </body>
     </html>

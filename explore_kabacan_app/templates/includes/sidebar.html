@@ -139,8 +139,18 @@
                     <div class="collapse {% if 'report' in request.path %}show{% endif %}" id="report">
                         <ul class="nav nav-collapse">
                             <li>
-                                <a href="{% url 'report' %}">
-                                    <span class="sub-item">Tourist Report</span>
+                                <a href="{% url 'annually_report' %}">
+                                    <span class="sub-item">Annual Report</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'weekly_report' %}">
+                                    <span class="sub-item">Weekly Report</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'monthly_report' %}">
+                                    <span class="sub-item">Monthly Report</span>
                                 </a>
                             </li>
                         </ul>

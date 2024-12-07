@@ -7,6 +7,9 @@
     </div>
     <h3 class="text-center mt-3">Sign Up</h3>
     {% include './includes/message.html' %}
+    <div class="alert" id="alertContainer">
+        <span id="error-message"></span>
+    </div>
     <form method="post">
         {% csrf_token %}
         <div class="login-form">
@@ -67,4 +70,80 @@
         </div>
     </form>
 </div>
+{% endblock %}
+
+
+{% block specific_js %}
+<script>
+    const elementEmail = document.getElementById("id_email");
+
+    if (elementEmail) {
+        elementEmail.addEventListener("input", function(e) {
+            const emailValue = e.target.value;
+            const errorMessage = document.getElementById("error-message");
+            const alert = document.getElementById("alertContainer");
+            const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+            if (emailPattern.test(emailValue)) {
+                if (errorMessage) {
+                    errorMessage.style.display = "none";
+                    alert.classList.remove("alert-danger");
+                }
+            } else {
+                if (errorMessage) {
+                    errorMessage.style.display = "block";
+                    errorMessage.textContent = 'Please enter a valid email address.';
+                    alert.classList.add("alert-danger");
+                }
+            }
+        });
+    }
+
+
+    const elementPassword = document.getElementById("id_password1");
+    const confirmPassword = document.getElementById("id_password2");
+
+    if (elementPassword) {
+        elementPassword.addEventListener("input", function(e) {
+            const passwordValue = e.target.value;
+            const errorMessagePassword = document.getElementById("error-message");
+            const alertPassword = document.getElementById("alertContainer");
+
+            const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{10,}$/;
+
+            if (passwordPattern.test(passwordValue)) {
+                if (errorMessagePassword) {
+                    errorMessagePassword.style.display = "none";
+                    alertPassword.classList.remove("alert-danger");
+                }
+            } else {
+                if (errorMessagePassword) {
+                    errorMessagePassword.style.display = "block";
+                    errorMessagePassword.textContent = 'Password must be at least 10 characters long, include a number and a special character.';
+                    alertPassword.classList.add("alert-danger");
+                }
+            }
+        });
+    }
+
+    if (confirmPassword) {
+        confirmPassword.addEventListener("input", function(e) {
+            const passwordValue = e.target.value;
+
+            const errorMessagePassword = document.getElementById("error-message");
+            const alertPassword = document.getElementById("alertContainer");
+            
+            if (passwordValue != elementPassword.value) {
+                errorMessagePassword.style.display = "block";
+                errorMessagePassword.textContent = 'Confirm password does not match with the primary password.';
+                alertPassword.classList.add("alert-danger");
+            } else {
+                errorMessagePassword.style.display = "none";
+                alertPassword.classList.remove("alert-danger");
+            }
+        });
+    }
+
+
+</script>
 {% endblock %}

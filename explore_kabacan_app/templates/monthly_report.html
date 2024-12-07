@@ -1,0 +1,56 @@
+{% extends './includes/base.html' %}
+
+{% block content %}
+<div class="page-inner">
+    <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
+        <div>
+            <h3 class="fw-bold mb-3">Tourist Spot Monthly Reports</h3>
+            <h6 class="op-7 mb-2">Export your monthly report of tourist spot in Kabacan</h6>
+        </div>
+    </div>
+    {% include './includes/message.html' %}
+    <div class="card p-3">
+        <form action="{% url 'generate_pdf_report' %}" method="GET">
+            <div class="row d-flex align-items-center justify-content-between">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <input type="date" class="form-control" id="start_date" name="start_date" required>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <input type="date" class="form-control" id="end_date" name="end_date" required>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-primary btn-block w-100" value="Export Monthly Visitors">
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <div class="card py-3">
+        <table class="table" id="datatable">
+            <thead>
+                <tr>
+                    <th>Tourist name</th>
+                    <th>Destination</th>
+                    <th>Gender</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tourist in tourists %}
+                <tr>
+                    <td>{{ tourist.get_full_name }}</td>
+                    <td>{{ tourist.destination }}</td>
+                    <td>{{ tourist.gender }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+</div>
+{% endblock %}

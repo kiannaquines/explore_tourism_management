@@ -89,7 +89,6 @@ class Tourist(models.Model):
     lastname = models.CharField(max_length=255, null=False, blank=False)
     dob = models.DateField(auto_now_add=False)
     gender = models.CharField(max_length=255, null=False, blank=False, choices=GENDER)
-    email = models.EmailField(max_length=255, blank=False)
     phone_number = models.CharField(max_length=255, null=False, blank=False)
     address = models.CharField(max_length=255, null=False, blank=False)
     destination = models.ForeignKey(Spot, on_delete=models.SET_NULL, null=True)

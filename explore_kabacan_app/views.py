@@ -375,11 +375,41 @@ class DashboardView(CustomLoginRequiredMixin, View):
         context["most_visited_spot"] = Spot.objects.annotate(
             visit_count=Count("tourist")
         ).order_by("-visit_count")[:10]
+
+        most_visited_spots = Spot.objects.annotate(
+            visit_count=Count("tourist")
+        ).order_by("-visit_count")[:10]
+
+        chart_data = [
+            {"name": spot.spot, "y": spot.visit_count}
+            for spot in most_visited_spots
+        ]
+
+        context["chart_data"] = chart_data
+
         return render(request, self.template_name, context)
 
 
-class TouristReportView(CustomLoginRequiredMixin, View):
-    template_name = "report.html"
+class AnnuallyTouristReportView(CustomLoginRequiredMixin, View):
+    template_name = "annually_report.html"
+
+    def get(self, request, *args, **kwargs):
+        context = {}
+        context["tourists"] = Tourist.objects.all().order_by('-visit_date')
+        return render(request, self.template_name, context)
+
+
+class MonthlyTouristReportView(CustomLoginRequiredMixin, View):
+    template_name = "monthly_report.html"
+
+    def get(self, request, *args, **kwargs):
+        context = {}
+        context["tourists"] = Tourist.objects.all().order_by('-visit_date')
+        return render(request, self.template_name, context)
+
+
+class TouristWeeklyReportView(CustomLoginRequiredMixin, View):
+    template_name = "report_weekly.html"
 
     def get(self, request, *args, **kwargs):
         context = {}

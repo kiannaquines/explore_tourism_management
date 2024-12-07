@@ -30,6 +30,9 @@ class CreateTouristForm(forms.ModelForm):
         if 'dob' in self.fields:
             self.fields['dob'].label = 'Birth Date'
 
+        if 'middlename' in self.fields:
+            self.fields['middlename'].label = 'Middle (Optional)'
+
         if 'gender' in self.fields:
             self.fields['gender'].choices = [('Male', 'Male'), ('Female', 'Female')]
             self.fields['gender'].label = 'Gender'

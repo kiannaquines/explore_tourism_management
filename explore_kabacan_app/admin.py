@@ -34,9 +34,9 @@ class SpotCategoryAdmin(admin.ModelAdmin):
         return True
 
 class TouristAdmin(admin.ModelAdmin):
-    list_display = ("firstname", "lastname", "email", "phone_number")
+    list_display = ("firstname", "lastname", "phone_number")
     list_filter = ("lastname", "visit_date", "destination")
-    search_fields = ("firstname", "lastname", "email")
+    search_fields = ("firstname", "lastname")
 
     def has_view_permission(self, request, obj=None):
         return True

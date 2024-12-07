@@ -98,7 +98,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-6">
             <div class="card card-round">
                 <div class="card-header">
                     <div class="card-head-row">
@@ -107,11 +107,30 @@
                 </div>
                 <div class="card-body">
                     <div class="chart-container">
-                        <div id="statisticsChart" style="height: 100%; width: 100%;"></div>
+                        <div id="statisticsChart"></div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="col-md-6">
+            <div class="card card-round">
+                <div class="card-header">
+                    <div class="card-head-row">
+                        <div class="card-title">Most Visited Spot</div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <span id="mostVistedData" data-mostvisted="{{ chart_data|safe }}"></span>
+                        <div id="mostVisitedSpot"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
         <div class="col-md-12">
             <div class="card card-round">
                 <div class="card-header">
@@ -223,4 +242,39 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+
+{% block specfic_js %}
+<script>
+     const chartData = {{ chart_data|safe }}
+            if (chartData && chartData.length > 0) {
+                const spotsData = chartData.map(item => item.y);
+                const spotLabels = chartData.map(item => item.name);
+
+                var chartOptions = {
+                    series: spotsData,
+                    chart: {
+                        type: 'donut',
+                        fontFamily: 'Public Sans',
+                    },
+                    colors: ['#106F3B', '#3bbf5c', '#d2fba4', '#5eb229', '#f5a623', '#f56a79', '#a0c8e4', '#7b8d45', '#bfb3cd', '#f27c4e'],
+                    labels: spotLabels,
+                    responsive: [{
+                        breakpoint: 480,
+                        options: {
+                            chart: {
+                                width: 200,
+                            },
+                            legend: {
+                                position: 'bottom',
+                            },
+                        },
+                    }],
+                };
+
+                var spotDistributionChart = new ApexCharts(document.querySelector("#mostVisitedSpot"), chartOptions);
+                spotDistributionChart.render();
+            }
+</script>
 {% endblock %}

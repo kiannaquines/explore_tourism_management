@@ -12,7 +12,9 @@ urlpatterns = [
     path("category/list", SpotCategoryView.as_view(), name="category"),
     path("tourist/list", TouristView.as_view(), name="toursit"),
     path("users/list", UsersView.as_view(), name="users"),
-    path("report/list", TouristReportView.as_view(), name="report"),
+    path("report/annually/list", AnnuallyTouristReportView.as_view(), name="annually_report"),
+    path("report/weekly/list", TouristWeeklyReportView.as_view(), name="weekly_report"),
+    path("report/monthly/list", MonthlyTouristReportView.as_view(), name="monthly_report"),
 
     # Add View
     path("users/add", AddUserView.as_view(), name="add_user"),
