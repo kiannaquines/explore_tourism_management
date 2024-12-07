@@ -15,6 +15,7 @@ urlpatterns = [
     path("report/annually/list", AnnuallyTouristReportView.as_view(), name="annually_report"),
     path("report/weekly/list", TouristWeeklyReportView.as_view(), name="weekly_report"),
     path("report/monthly/list", MonthlyTouristReportView.as_view(), name="monthly_report"),
+    path("report/mostvisited/list", MostVisitedByTouristPerSpotReportView.as_view(), name="per_spot_report"),
 
     # Add View
     path("users/add", AddUserView.as_view(), name="add_user"),

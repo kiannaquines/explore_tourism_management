@@ -1,0 +1,55 @@
+{% extends './includes/base.html' %}
+
+{% block content %}
+<div class="page-inner">
+    <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
+        <div>
+            <h3 class="fw-bold mb-3">Most Visited Tourist Spot Reports</h3>
+            <h6 class="op-7 mb-2">Export most visited tourist spot in Kabacan</h6>
+        </div>
+    </div>
+    {% include './includes/message.html' %}
+    <div class="card p-3">
+        <form action="{% url 'generate_pdf_report' %}" method="GET">
+            <div class="row d-flex align-items-center justify-content-between">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <select type="date" class="form-control" id="spot_name" name="spot_name" required>
+                            {% for item in items %}
+                            <option value="{{ item.id }}">{{ item.spot }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-primary btn-block w-100 btn-md" value="Export Visitors">
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <div class="card py-3">
+        <table class="table" id="datatable">
+            <thead>
+                <tr>
+                    <th>Tourist Spot</th>
+                    <th>Category</th>
+                    <th>Date Added</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td>{{ item.spot }}</td>
+                    <td>{{ item.category }}</td>
+                    <td>{{ item.date_added }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+</div>
+{% endblock %}

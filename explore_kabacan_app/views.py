@@ -389,6 +389,13 @@ class DashboardView(CustomLoginRequiredMixin, View):
 
         return render(request, self.template_name, context)
 
+class MostVisitedByTouristPerSpotReportView(CustomLoginRequiredMixin, View):
+    template_name = "report_tourist_per_spot.html"
+
+    def get(self, request, *args, **kwargs):
+        context = {}
+        context["items"] = Spot.objects.all()
+        return render(request, self.template_name, context)
 
 class AnnuallyTouristReportView(CustomLoginRequiredMixin, View):
     template_name = "annually_report.html"
