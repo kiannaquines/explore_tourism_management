@@ -37,6 +37,9 @@ class CreateTouristForm(forms.ModelForm):
             self.fields['gender'].choices = [('Male', 'Male'), ('Female', 'Female')]
             self.fields['gender'].label = 'Gender'
         
+        if 'visitor_type' in self.fields:
+            self.fields['visitor_type'].choices = [('Individual', 'Individual'), ('Group', 'Group')]
+
         if 'destination' in self.fields:
             self.fields['destination'] = forms.ModelChoiceField(
                 queryset=Spot.objects.all(),

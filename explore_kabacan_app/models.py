@@ -84,15 +84,22 @@ class Tourist(models.Model):
         ("Female", "Female"),
     )
 
+    VISITOR_TYPE = (
+        ("Individual","Individual"),
+        ("Group","Group"),
+    )
+
     firstname = models.CharField(max_length=255, null=False, blank=False)
     middlename = models.CharField(max_length=255, blank=True, null=True)
     lastname = models.CharField(max_length=255, null=False, blank=False)
     dob = models.DateField(auto_now_add=False)
     gender = models.CharField(max_length=255, null=False, blank=False, choices=GENDER)
-    phone_number = models.CharField(max_length=255, null=False, blank=False)
+    phone_number = models.CharField(max_length=11, null=False, blank=False)
     address = models.CharField(max_length=255, null=False, blank=False)
     destination = models.ForeignKey(Spot, on_delete=models.SET_NULL, null=True)
     visit_date = models.DateTimeField(auto_now_add=True, editable=True, null=False, blank=False)
+    visitor_type = models.CharField(max_length=255, choices=VISITOR_TYPE, null=True, blank=True)
+    number_of_visitors = models.IntegerField(null=True, blank=True, default=0)
 
     def get_full_name(self):
         return (

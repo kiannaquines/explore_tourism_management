@@ -47,4 +47,30 @@
         </div>
     </form>
 </div>
+<script>
+
+    window.onload = function() {
+        const element = document.getElementById('id_visitor_type').value;
+    
+        if (element === 'Individual') {
+            document.getElementById('id_number_of_visitors').style.display = 'none';
+            document.querySelector('label[for="id_number_of_visitors"]').style.display = 'none';
+        } else {
+            document.getElementById('id_number_of_visitors').style.display = 'block';
+            document.querySelector('label[for="id_number_of_visitors"]').style.display = 'block';
+        }
+    }
+
+
+    const element = document.getElementById('id_visitor_type').addEventListener('change', function(e){
+        if (e.target.value === 'Individual') {
+            document.getElementById('id_number_of_visitors').style.display = 'none';
+            document.querySelector('label[for="id_number_of_visitors"]').style.display = 'none';
+        } else {
+            document.getElementById('id_number_of_visitors').style.display = 'block';
+            document.querySelector('label[for="id_number_of_visitors"]').style.display = 'block';
+        }
+    });
+    
+</script>
 {% endblock %}
